@@ -12,10 +12,10 @@
     tools:context="com.me.wish.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <ListView
+    <ExpandableListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/wishListView"
+        android:id="@+id/expandableListView"
         android:layout_centerVertical="false"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>
