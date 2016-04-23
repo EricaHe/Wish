@@ -21,11 +21,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS wish" +
                 "(_id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR, description TEXT, parent_id INTEGER, " +
-                "child_id INTEGER, comment TEXT, photo TEXT, expr INTEGER, due_date TEXT, create_date TEXT, " +
+                "child_id TEXT, comment TEXT, photo_path TEXT, expr INTEGER, due_date TEXT, create_date TEXT, " +
                 "finish_date TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS user" +
                 "(_id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, level INTEGER, current_expr INTEGER, " +
-                "finished_wish )");
+                "max_expr INTEGER, finished_wish TEXT, not_finished_wish TEXT)");
     }
 
     //如果DATABASE_VERSION值被改为2,系统发现现有数据库版本不同,即会调用onUpgrade
