@@ -235,18 +235,12 @@ public class MainActivity extends AppCompatActivity
                 convertView.setTag(groupHolder);
             }
             else
-            {
                 groupHolder = (GroupHolder)convertView.getTag();
-            }
 
             if (!isExpanded)
-            {
                 groupHolder.img.setBackgroundResource(android.R.drawable.arrow_down_float);
-            }
             else
-            {
                 groupHolder.img.setBackgroundResource(android.R.drawable.arrow_up_float);
-            }
 
             groupHolder.txt.setText(wishes.get(groupPosition));
             return convertView;
