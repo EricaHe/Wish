@@ -31,18 +31,12 @@ public class MainActivity extends AppCompatActivity
 
     private List<String> wishes;
     private List<List<String>> childWishes;
+    private DBManager wishMgr;
 
     protected void dataInitialization(){
         wishes = new ArrayList<String>();
         childWishes = new ArrayList<List<String>>();
-        wishes.add("Lose some weight");
-        wishes.add("Learning English");
 
-        List<String> tempArray = new ArrayList<String>();
-        tempArray.add("Jogging 2 km");
-        tempArray.add("Have more vegetable for dinner");
-
-        childWishes.add(tempArray);
     }
 
     @Override
@@ -51,6 +45,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        wishMgr = new DBManager(this);
 
         dataInitialization();
 
@@ -101,7 +96,13 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    // 用过ListView的人一定很熟悉，只不过这里是BaseExpandableListAdapter
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //应用的最后一个Activity关闭时应释放DB
+        wishMgr.closeDB();
+    }
+
     // TODO:子菜单为空会强退，要对子心愿长度做检查
     // TODO:界面排版
     class MyExpandableListViewAdapter extends BaseExpandableListAdapter
