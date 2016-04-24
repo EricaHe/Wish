@@ -25,7 +25,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "finish_date TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS user" +
                 "(_id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, level INTEGER, current_expr INTEGER, " +
-                "max_expr INTEGER, finished_wish TEXT, not_finished_wish TEXT)");
+                "max_expr INTEGER, honors TEXT)");
     }
 
     //如果DATABASE_VERSION值被改为2,系统发现现有数据库版本不同,即会调用onUpgrade
