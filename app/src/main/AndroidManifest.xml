@@ -21,13 +21,12 @@
         <activity
             android:name=".DetailActivity"
             android:label="Wish+"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".PersonalCenterActivity"
             android:label="Wish+"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".AddActivity"></activity>
     </application>
 
 </manifest>

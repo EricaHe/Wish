@@ -23,7 +23,7 @@ public class Wish {
     public Date createDate;
     public Date finishDate;
 
-    public Wish(){
+    public Wish() {
         this.title = "";
         this.description = "";
         this.comment = "";
@@ -39,7 +39,7 @@ public class Wish {
         this.finishDate = null;
     }
 
-    public Wish(String title,String description, Date dueDate, Date createDate){
+    public Wish(String title, String description, Date dueDate, Date createDate) {
         this.title = title;
         this.description = description;
         this.comment = "";
@@ -55,7 +55,7 @@ public class Wish {
         this.finishDate = null;
     }
 
-    public Wish(String title,String description, Date dueDate, Date createDate, Wish parent, List<Wish> children){
+    public Wish(String title, String description, Date dueDate, Date createDate, Wish parent, List<Wish> children) {
         this.title = title;
         this.description = description;
         this.comment = "";
