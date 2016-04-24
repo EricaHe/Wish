@@ -8,7 +8,7 @@ import java.util.List;
  */
 
 public class Wish {
-    public int _id;
+    public int id;
     public int expr;
 
     public String title;
