@@ -19,15 +19,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS parent_wish" +
-                "(_id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR, description TEXT, " +
+        db.execSQL("CREATE TABLE IF NOT EXISTS parent_wish " +
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR, description TEXT, " +
                 "child_id TEXT, comment TEXT, photo_path TEXT, expr INTEGER, due_date TEXT, create_date TEXT, " +
                 "finish_date TEXT, is_finished INTEGER)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS child_wish" +
-                "(_id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR, description TEXT, parent_id INTEGER, " +
+        db.execSQL("CREATE TABLE IF NOT EXISTS child_wish " +
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR, description TEXT, parent_id INTEGER, " +
                 "comment TEXT, photo_path TEXT, expr INTEGER, due_date TEXT, create_date TEXT, " +
                 "finish_date TEXT, is_finished INTEGER)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS user" +
+        db.execSQL("CREATE TABLE IF NOT EXISTS user " +
                 "(_id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, level INTEGER, current_expr INTEGER, " +
                 "max_expr INTEGER, honors TEXT)");
     }

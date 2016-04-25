@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,33 +37,14 @@ public class MainActivity extends AppCompatActivity
     private List<List<Wish>> childWishes;
     private WishDBManager wishMgr;
 
-    protected void dataInitialization() throws ParseException {
+    protected void dataInitialization(WishDBManager dbm) throws ParseException {
         wishes = new ArrayList<Wish>();
         childWishes = new ArrayList<List<Wish>>();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
-
-        Wish child1OfWish1 = new Wish("Jogging", "child wish of wish1", sdf.parse("2016年08月10日 10:30"), new Date());
-        Wish child1OfWish2 = new Wish("1 List of Vocabulary", "child wish of wish2", sdf.parse("2016年09月10日 10:30"),
-                new Date());
-
-        ArrayList<Wish> childrenOfWish1 = new ArrayList<Wish>();
-        ArrayList<Wish> childrenOfWish2 = new ArrayList<Wish>();
-        childrenOfWish1.add(child1OfWish1);
-        childrenOfWish2.add(child1OfWish2);
-
-        Wish wish1 = new Wish("Lose Weight", "wish1", sdf.parse("2016年10月10日 09:00"), new Date(), null, childrenOfWish1);
-        for (Wish child : childrenOfWish1) {
-            child.parent = wish1;
+        wishes = dbm.queryAllParentWishes();
+        for(Wish wish : wishes){
+            childWishes.add(dbm.queryChildWishesByParent(wish));
         }
-        Wish wish2 = new Wish("Learn English", "wish2", sdf.parse("2016年11月10日 10:30"), new Date(), null, childrenOfWish2);
-        for (Wish child : childrenOfWish2) {
-            child.parent = wish2;
-        }
-        wishes.add(wish1);
-        wishes.add(wish2);
-        childWishes.add(childrenOfWish1);
-        childWishes.add(childrenOfWish2);
     }
 
     @Override
@@ -71,10 +53,13 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Log.d("on create","begin");
+
         wishMgr = new WishDBManager(this);
 
         try {
-            dataInitialization();
+            dataInitialization(wishMgr);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -89,7 +74,7 @@ public class MainActivity extends AppCompatActivity
                 @SuppressLint("NewApi")
                 @Override
                 public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                    return childWishes.get(groupPosition).isEmpty();
+                    return groupPosition >= childWishes.size() || childWishes.get(groupPosition).isEmpty();
                 }
             });
         }
