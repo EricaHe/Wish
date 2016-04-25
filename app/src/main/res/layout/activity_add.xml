@@ -9,42 +9,37 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.me.wish.AddActivity">
 
-    <TableLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:weightSum="1">
 
-        <TableRow
+        <EditText
+            android:id="@+id/titleEditText"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:hint="@string/titleText" />
 
-            <TextView
-                android:text="名称"
-                android:id="@+id/titleTextView"
-                android:layout_column="0" />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/titleEditText"
-                android:layout_column="1"
-                android:layout_span="3"/>
-        </TableRow>
-        <TableRow
+        <EditText
+            android:id="@+id/descriptionEditText"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TextView
-                android:text="描述"
-                android:id="@+id/descriptionTextView"
-                android:layout_column="0" />
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/descriptionText"
+            android:inputType="textMultiLine"
+            android:layout_weight="0.06" />
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/descriptionEditText"
-                android:layout_column="1"
-                android:layout_span="3"/>
-        </TableRow>
-    </TableLayout>
+        <EditText
+            android:id="@+id/dueDateEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/dueDateEditTextHint"
+            android:inputType="date" />
+
+
+    </LinearLayout>
 </RelativeLayout>

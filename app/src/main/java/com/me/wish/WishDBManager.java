@@ -38,7 +38,7 @@ public class WishDBManager {
                     childrenId.add(childWish.id);
                 }
                 /* get format of date */
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
                 Object[] item = new Object[]{wish.title, wish.description, wish.parent.id, childrenId.toString(),
                         wish.comment, wish.photo_path, wish.expr, sdf.format(wish.dueDate), sdf.format(wish.createDate),
                         sdf.format(wish.finishDate)};
@@ -101,7 +101,7 @@ public class WishDBManager {
     }
 
     public void updateDueDate(Wish wish) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
         ContentValues cv = new ContentValues();
         cv.put("due_date", sdf.format(wish.dueDate));
         db.update("id", cv, "id = ?", new String[]{Integer.toString(wish.id)});
@@ -137,7 +137,7 @@ public class WishDBManager {
             wish.photo_path = c.getString(c.getColumnIndex("photo_path")).split(",");
             wish.expr = c.getInt(c.getColumnIndex("expr"));
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
             wish.createDate = sdf.parse(c.getString(c.getColumnIndex("create_date")));
             wish.dueDate = sdf.parse(c.getString(c.getColumnIndex("due_date")));
             wish.finishDate = sdf.parse(c.getString(c.getColumnIndex("finish_date")));
@@ -159,7 +159,7 @@ public class WishDBManager {
             wish.photo_path = c.getString(c.getColumnIndex("photo_path")).split(",");
             wish.expr = c.getInt(c.getColumnIndex("expr"));
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
             wish.createDate = sdf.parse(c.getString(c.getColumnIndex("create_date")));
             wish.dueDate = sdf.parse(c.getString(c.getColumnIndex("due_date")));
             wish.finishDate = sdf.parse(c.getString(c.getColumnIndex("finish_date")));
@@ -180,7 +180,7 @@ public class WishDBManager {
             wish.photo_path = c.getString(c.getColumnIndex("photo_path")).split(",");
             wish.expr = c.getInt(c.getColumnIndex("expr"));
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
             wish.createDate = sdf.parse(c.getString(c.getColumnIndex("create_date")));
             wish.dueDate = sdf.parse(c.getString(c.getColumnIndex("due_date")));
             wish.finishDate = sdf.parse(c.getString(c.getColumnIndex("finish_date")));
@@ -203,7 +203,7 @@ public class WishDBManager {
             wish.photo_path = c.getString(c.getColumnIndex("photo_path")).split(",");
             wish.expr = c.getInt(c.getColumnIndex("expr"));
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
             wish.createDate = sdf.parse(c.getString(c.getColumnIndex("create_date")));
             wish.dueDate = sdf.parse(c.getString(c.getColumnIndex("due_date")));
             wish.finishDate = sdf.parse(c.getString(c.getColumnIndex("finish_date")));

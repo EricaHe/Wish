@@ -40,21 +40,22 @@ public class MainActivity extends AppCompatActivity
         wishes = new ArrayList<Wish>();
         childWishes = new ArrayList<List<Wish>>();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
 
-        Wish child1OfWish1 = new Wish("Jogging", "child wish of wish1", sdf.parse("2016-08-10"), new Date());
-        Wish child1OfWish2 = new Wish("1 List of Vocabulary", "child wish of wish2", sdf.parse("2016-09-10"), new Date());
+        Wish child1OfWish1 = new Wish("Jogging", "child wish of wish1", sdf.parse("2016年08月10日 10:30"), new Date());
+        Wish child1OfWish2 = new Wish("1 List of Vocabulary", "child wish of wish2", sdf.parse("2016年09月10日 10:30"),
+                new Date());
 
         ArrayList<Wish> childrenOfWish1 = new ArrayList<Wish>();
         ArrayList<Wish> childrenOfWish2 = new ArrayList<Wish>();
         childrenOfWish1.add(child1OfWish1);
         childrenOfWish2.add(child1OfWish2);
 
-        Wish wish1 = new Wish("Lose Weight", "wish1", sdf.parse("2016-10-10"), new Date(), null, childrenOfWish1);
+        Wish wish1 = new Wish("Lose Weight", "wish1", sdf.parse("2016年10月10日 09:00"), new Date(), null, childrenOfWish1);
         for (Wish child : childrenOfWish1) {
             child.parent = wish1;
         }
-        Wish wish2 = new Wish("Learn English", "wish2", sdf.parse("2016-11-10"), new Date(), null, childrenOfWish2);
+        Wish wish2 = new Wish("Learn English", "wish2", sdf.parse("2016年11月10日 10:30"), new Date(), null, childrenOfWish2);
         for (Wish child : childrenOfWish2) {
             child.parent = wish2;
         }
