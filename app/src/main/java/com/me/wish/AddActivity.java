@@ -22,7 +22,7 @@ public class AddActivity extends AppCompatActivity {
 
         dueDateTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
                             AddActivity.this);
                     dateTimePicKDialog.dateTimePicKDialog(dueDateTime);

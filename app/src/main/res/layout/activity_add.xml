@@ -27,10 +27,10 @@
             android:id="@+id/descriptionEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="0.06"
             android:ems="10"
             android:hint="@string/descriptionText"
-            android:inputType="textMultiLine"
-            android:layout_weight="0.06" />
+            android:inputType="textMultiLine" />
 
         <EditText
             android:id="@+id/dueDateEditText"
@@ -40,6 +40,14 @@
             android:hint="@string/dueDateEditTextHint"
             android:inputType="date" />
 
+        <Button
+            android:id="@+id/addWishBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/addWishText"
+            android:textSize="16dp"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/abc_primary_text_material_dark" />
 
     </LinearLayout>
 </RelativeLayout>

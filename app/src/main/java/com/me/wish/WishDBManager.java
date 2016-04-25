@@ -2,6 +2,7 @@ package com.me.wish;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -28,23 +29,32 @@ public class WishDBManager {
 
     // add part
     // TODO:解决子心愿id与父心愿id在添加记录时的问题
-    public void addWishes(List<Wish> wishes) {
+    public void addChildWishes(List<Wish> childWishes) {
         db.beginTransaction();  //开始事务
         try {
-            for (Wish wish : wishes) {
-                // get child wishes' id
-                List<Integer> childrenId = new ArrayList<Integer>();
-                for (Wish childWish : wish.children) {
-                    childrenId.add(childWish.id);
-                }
+            for (Wish wish : childWishes) {
                 /* get format of date */
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
-                Object[] item = new Object[]{wish.title, wish.description, wish.parent.id, childrenId.toString(),
+                Object[] item = new Object[]{wish.title, wish.description, wish.parent.id,
                         wish.comment, wish.photo_path, wish.expr, sdf.format(wish.dueDate), sdf.format(wish.createDate),
-                        sdf.format(wish.finishDate)};
-
-                db.execSQL("INSERT INTO wish VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?, ?)", item);
+                        sdf.format(wish.finishDate), wish.isFinished};
+                db.execSQL("INSERT INTO child_wish VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?, ?)", item);
             }
+            db.setTransactionSuccessful();  //设置事务成功完成
+        } finally {
+            db.endTransaction();    //结束事务
+        }
+    }
+
+    public void addParentWish(Wish parentWish) {
+        db.beginTransaction();  //开始事务
+        try {
+            /* get format of date */
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
+            Object[] item = new Object[]{parentWish.title, parentWish.description, parentWish.childrenIdToString(),
+                    parentWish.comment, parentWish.photo_path, parentWish.expr, sdf.format(parentWish.dueDate),
+                    sdf.format(parentWish.createDate), sdf.format(parentWish.finishDate), parentWish.isFinished};
+            db.execSQL("INSERT INTO parent_wish VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?, ?)", item);
             db.setTransactionSuccessful();  //设置事务成功完成
         } finally {
             db.endTransaction();    //结束事务
@@ -53,104 +63,104 @@ public class WishDBManager {
 
     // update part
     // table wish
-    public void updateTitle(Wish wish) {
+    public void updateTitle(String table, Wish wish) {
         ContentValues cv = new ContentValues();
         cv.put("title", wish.title);
-        db.update("id", cv, "id = ?", new String[]{Integer.toString(wish.id)});
+        db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateDescription(Wish wish) {
+    public void updateDescription(String table,Wish wish) {
         ContentValues cv = new ContentValues();
         cv.put("description", wish.description);
-        db.update("id", cv, "id = ?", new String[]{Integer.toString(wish.id)});
+        db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateParentId(Wish wish) {
+    public void updateParentId(String table,Wish wish) {
         ContentValues cv = new ContentValues();
         cv.put("parent_id", wish.parent.id);
-        db.update("id", cv, "id = ?", new String[]{Integer.toString(wish.id)});
+        db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateChildId(Wish wish) {
+    public void updateChildId(String table,Wish wish) {
         ContentValues cv = new ContentValues();
-        // get child wishes' id
-        List<Integer> childrenId = new ArrayList<Integer>();
-        for (Wish childWish : wish.children) {
-            childrenId.add(childWish.id);
-        }
-        cv.put("child_id", childrenId.toString());
-        db.update("id", cv, "id = ?", new String[]{Integer.toString(wish.id)});
+        cv.put("child_id", wish.childrenIdToString());
+        db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateComment(Wish wish) {
+    public void updateComment(String table,Wish wish) {
         ContentValues cv = new ContentValues();
         cv.put("comment", wish.comment);
-        db.update("id", cv, "id = ?", new String[]{Integer.toString(wish.id)});
+        db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updatePhotoPath(Wish wish) {
+    public void updatePhotoPath(String table,Wish wish) {
         ContentValues cv = new ContentValues();
         cv.put("photo_path", wish.photo_path.toString());
-        db.update("id", cv, "id = ?", new String[]{Integer.toString(wish.id)});
+        db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateExpr(Wish wish) {
+    public void updateExpr(String table,Wish wish) {
         ContentValues cv = new ContentValues();
         cv.put("expr", wish.expr);
-        db.update("id", cv, "id = ?", new String[]{Integer.toString(wish.id)});
+        db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateDueDate(Wish wish) {
+    public void updateDueDate(String table,Wish wish) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
         ContentValues cv = new ContentValues();
         cv.put("due_date", sdf.format(wish.dueDate));
-        db.update("id", cv, "id = ?", new String[]{Integer.toString(wish.id)});
+        db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateCreateDate(Wish wish) {
+    public void updateCreateDate(String table,Wish wish) {
         ContentValues cv = new ContentValues();
         cv.put("create_date", wish.createDate.toString());
-        db.update("id", cv, "id = ?", new String[]{Integer.toString(wish.id)});
+        db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateFinishDate(Wish wish) {
+    public void updateFinishDate(String table,Wish wish) {
         ContentValues cv = new ContentValues();
         cv.put("finish_date", wish.finishDate.toString());
-        db.update("id", cv, "id = ?", new String[]{Integer.toString(wish.id)});
+        db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
+    }
+
+    public void updateIsFinished(String table, Wish wish){
+        ContentValues cv = new ContentValues();
+        cv.put("is_finished", (wish.isFinished)?1:0);
+        db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
     // delete part
-    public void deleteWish(Wish wish) {
-        db.delete("wish", "id = ?", new String[]{Integer.toString(wish.id)});
+    public void deleteWishes(String table, List<Wish> wishes) {
+        // 删除子心愿后，还需更新父心愿的child_id字段
+        List<Wish> parentList = new ArrayList<>();
+        if(table.equals("child_wish")){
+            for(Wish childWish : wishes){
+                db.delete(table, "id = ?", new String[]{Integer.toString(childWish.id)});
+                if(!parentList.contains(childWish.parent))
+                    parentList.add(childWish.parent);
+            }
+            for(Wish parent : parentList){
+                parent.children.removeAll(wishes);
+                updateChildId("parent_wish", parent);
+            }
+        }
+        // 删除父心愿时，要同时删除子心愿
+        else if (table.equals("parent_wish")){
+            for (Wish parentWish:wishes){
+                for (Wish childWish:parentWish.children){
+                    db.delete("child_wish","id = ?",new String[]{Integer.toString(childWish.id)});
+                }
+                db.delete(table,"id = ?",new String[]{Integer.toString(parentWish.id)});
+            }
+        }
     }
 
     // query part
-    public List<Wish> queryAllWishes() throws ParseException {
-        ArrayList<Wish> wishes = new ArrayList<>();
-        Cursor c = db.rawQuery("SELECT * FROM person", null);
-        while (c.moveToNext()) {
-            Wish wish = new Wish();
-            wish.id = c.getInt(c.getColumnIndex("id"));
-            wish.title = c.getString(c.getColumnIndex("title"));
-            wish.description = c.getString(c.getColumnIndex("description"));
-            wish.comment = c.getString(c.getColumnIndex("comment"));
-            wish.photo_path = c.getString(c.getColumnIndex("photo_path")).split(",");
-            wish.expr = c.getInt(c.getColumnIndex("expr"));
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
-            wish.createDate = sdf.parse(c.getString(c.getColumnIndex("create_date")));
-            wish.dueDate = sdf.parse(c.getString(c.getColumnIndex("due_date")));
-            wish.finishDate = sdf.parse(c.getString(c.getColumnIndex("finish_date")));
-
-            wishes.add(wish);
-        }
-        c.close();
-        return wishes;
-    }
-
-    public Wish queryWishById(int id) throws ParseException {
+    public Wish queryParentWishById(int id) throws ParseException {
         Wish wish = new Wish();
-        Cursor c = db.rawQuery("select * from wish where id = ?", new String[]{Integer.toString(id)});
+        Cursor c = db.rawQuery("select * from parent_wish where id = ?", new String[]{Integer.toString(id)});
         if (c.moveToFirst()) {
             wish.id = id;
             wish.title = c.getString(c.getColumnIndex("title"));
@@ -159,10 +169,41 @@ public class WishDBManager {
             wish.photo_path = c.getString(c.getColumnIndex("photo_path")).split(",");
             wish.expr = c.getInt(c.getColumnIndex("expr"));
 
+            for(String sChildId : c.getString(c.getColumnIndex("child_id")).split(",")){
+                Integer childId = Integer.parseInt(sChildId);
+                wish.children.add(queryChildWishById(childId));
+            }
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
             wish.createDate = sdf.parse(c.getString(c.getColumnIndex("create_date")));
             wish.dueDate = sdf.parse(c.getString(c.getColumnIndex("due_date")));
             wish.finishDate = sdf.parse(c.getString(c.getColumnIndex("finish_date")));
+
+            wish.isFinished = c.getInt(c.getColumnIndex("is_finished")) == 1;
+        }
+        c.close();
+        return wish;
+    }
+
+    public Wish queryChildWishById(int id) throws ParseException {
+        Wish wish = new Wish();
+        Cursor c = db.rawQuery("select * from child_wish where id = ?", new String[]{Integer.toString(id)});
+        if (c.moveToFirst()) {
+            wish.id = id;
+            wish.title = c.getString(c.getColumnIndex("title"));
+            wish.description = c.getString(c.getColumnIndex("description"));
+            wish.comment = c.getString(c.getColumnIndex("comment"));
+            wish.photo_path = c.getString(c.getColumnIndex("photo_path")).split(",");
+            wish.expr = c.getInt(c.getColumnIndex("expr"));
+
+            wish.parent = queryParentWishById(c.getInt(c.getColumnIndex("parent_id")));
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
+            wish.createDate = sdf.parse(c.getString(c.getColumnIndex("create_date")));
+            wish.dueDate = sdf.parse(c.getString(c.getColumnIndex("due_date")));
+            wish.finishDate = sdf.parse(c.getString(c.getColumnIndex("finish_date")));
+
+            wish.isFinished = c.getInt(c.getColumnIndex("is_finished")) == 1;
         }
         c.close();
         return wish;
@@ -170,7 +211,7 @@ public class WishDBManager {
 
     public List<Wish> queryAllParentWishes() throws ParseException {
         ArrayList<Wish> wishes = new ArrayList<>();
-        Cursor c = db.rawQuery("SELECT * FROM wish where parent_id = ?", null);
+        Cursor c = db.rawQuery("SELECT * FROM parent_wish", null);
         while (c.moveToNext()) {
             Wish wish = new Wish();
             wish.id = c.getInt(c.getColumnIndex("id"));
@@ -184,6 +225,8 @@ public class WishDBManager {
             wish.createDate = sdf.parse(c.getString(c.getColumnIndex("create_date")));
             wish.dueDate = sdf.parse(c.getString(c.getColumnIndex("due_date")));
             wish.finishDate = sdf.parse(c.getString(c.getColumnIndex("finish_date")));
+
+            wish.isFinished = c.getInt(c.getColumnIndex("is_finished")) == 1;
 
             wishes.add(wish);
         }
@@ -193,7 +236,7 @@ public class WishDBManager {
 
     public List<Wish> queryChildWishesByParent(Wish parent) throws ParseException {
         ArrayList<Wish> wishes = new ArrayList<>();
-        Cursor c = db.rawQuery("SELECT * FROM wish where parent_id = ?", new String[]{Integer.toString(parent.id)});
+        Cursor c = db.rawQuery("SELECT * FROM child_wish where parent_id = ?", new String[]{Integer.toString(parent.id)});
         while (c.moveToNext()) {
             Wish wish = new Wish();
             wish.id = c.getInt(c.getColumnIndex("id"));
@@ -207,6 +250,8 @@ public class WishDBManager {
             wish.createDate = sdf.parse(c.getString(c.getColumnIndex("create_date")));
             wish.dueDate = sdf.parse(c.getString(c.getColumnIndex("due_date")));
             wish.finishDate = sdf.parse(c.getString(c.getColumnIndex("finish_date")));
+
+            wish.isFinished = c.getInt(c.getColumnIndex("is_finished")) == 1;
 
             wishes.add(wish);
         }

@@ -23,6 +23,8 @@ public class Wish {
     public Date createDate;
     public Date finishDate;
 
+    public boolean isFinished;
+
     public Wish() {
         this.title = "";
         this.description = "";
@@ -37,6 +39,8 @@ public class Wish {
         this.dueDate = null;
         this.createDate = null;
         this.finishDate = null;
+
+        this.isFinished = false;
     }
 
     public Wish(String title, String description, Date dueDate, Date createDate) {
@@ -53,6 +57,8 @@ public class Wish {
         this.dueDate = dueDate;
         this.createDate = createDate;
         this.finishDate = null;
+
+        this.isFinished = false;
     }
 
     public Wish(String title, String description, Date dueDate, Date createDate, Wish parent, List<Wish> children) {
@@ -69,5 +75,21 @@ public class Wish {
         this.dueDate = dueDate;
         this.createDate = createDate;
         this.finishDate = null;
+
+        this.isFinished = false;
+    }
+
+    public String childrenIdToString(){
+        String result = "";
+        for(Wish childWish : this.children){
+            result = result + "," + Integer.toString(childWish.id);
+        }
+        if(!result.equals("")){
+            result = result.substring(1);
+            return result;
+        }
+        else {
+            return null;
+        }
     }
 }
