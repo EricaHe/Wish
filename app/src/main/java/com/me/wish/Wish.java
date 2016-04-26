@@ -16,14 +16,32 @@ public class Wish {
     public String comment;
     public String[] photo_path;
 
-    public Wish parent;
-    public List<Wish> children;
+    public Integer parent_id;
+    public List<Integer> children_ids;
 
     public Date dueDate;
     public Date createDate;
     public Date finishDate;
 
     public boolean isFinished;
+
+    public Wish(String title) {
+        this.title = title;
+        this.description = "";
+        this.comment = "";
+        this.photo_path = null;
+
+        this.expr = 10;
+
+        this.parent_id = null;
+        this.children_ids = null;
+
+        this.dueDate = null;
+        this.createDate = null;
+        this.finishDate = null;
+
+        this.isFinished = false;
+    }
 
     public Wish() {
         this.title = "";
@@ -33,8 +51,8 @@ public class Wish {
 
         this.expr = 10;
 
-        this.parent = null;
-        this.children = null;
+        this.parent_id = null;
+        this.children_ids = null;
 
         this.dueDate = null;
         this.createDate = null;
@@ -51,8 +69,8 @@ public class Wish {
 
         this.expr = 10;
 
-        this.parent = null;
-        this.children = null;
+        this.parent_id = null;
+        this.children_ids = null;
 
         this.dueDate = dueDate;
         this.createDate = createDate;
@@ -61,7 +79,7 @@ public class Wish {
         this.isFinished = false;
     }
 
-    public Wish(String title, String description, Date dueDate, Date createDate, Wish parent, List<Wish> children) {
+    public Wish(String title, String description, Date dueDate, Date createDate, Integer parent_id, List<Integer> children_ids) {
         this.title = title;
         this.description = description;
         this.comment = "";
@@ -69,8 +87,8 @@ public class Wish {
 
         this.expr = 10;
 
-        this.parent = parent;
-        this.children = children;
+        this.parent_id = parent_id;
+        this.children_ids = children_ids;
 
         this.dueDate = dueDate;
         this.createDate = createDate;
@@ -79,17 +97,20 @@ public class Wish {
         this.isFinished = false;
     }
 
-    public String childrenIdToString(){
+    public String childrenIdToString() {
         String result = "";
-        for(Wish childWish : this.children){
-            result = result + "," + Integer.toString(childWish.id);
-        }
-        if(!result.equals("")){
-            result = result.substring(1);
-            return result;
-        }
-        else {
+        if (this.children_ids == null) {
             return null;
+        } else {
+            for (Integer childId : this.children_ids) {
+                result = result + "," + Integer.toString(childId);
+            }
+            if (!result.equals("")) {
+                result = result.substring(1);
+                return result;
+            } else {
+                return null;
+            }
         }
     }
 }

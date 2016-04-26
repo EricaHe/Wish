@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
 
         wishes = dbm.queryAllParentWishes();
         for (Wish wish : wishes) {
-            childWishes.add(dbm.queryChildWishesByParent(wish));
+            childWishes.add(dbm.queryChildWishesByParentId(wish.id));
         }
     }
 
@@ -54,10 +54,38 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Log.d("on create", "begin");
-
         wishMgr = new WishDBManager(this);
 
+
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent toAddActivity = new Intent(MainActivity.this, AddActivity.class);
+                    startActivity(toAddActivity);
+                }
+            });
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        if (drawer != null) {
+            drawer.setDrawerListener(toggle);
+        }
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(this);
+        }
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
         try {
             dataInitialization(wishMgr);
         } catch (ParseException e) {
@@ -95,30 +123,6 @@ public class MainActivity extends AppCompatActivity
         if (expandableListView != null) {
             expandableListView.setAdapter(adapter);
         }
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent toAddActivity = new Intent(MainActivity.this, AddActivity.class);
-                    startActivity(toAddActivity);
-                }
-            });
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        if (drawer != null) {
-            drawer.setDrawerListener(toggle);
-        }
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (navigationView != null) {
-            navigationView.setNavigationItemSelectedListener(this);
-        }
     }
 
     @Override
@@ -128,7 +132,6 @@ public class MainActivity extends AppCompatActivity
         wishMgr.closeDB();
     }
 
-    // TODO:子菜单为空会强退，要对子心愿长度做检查
     // TODO:界面排版
     class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
         private Context context;
