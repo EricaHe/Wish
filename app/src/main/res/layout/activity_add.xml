@@ -1,113 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<GridLayout
-    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:columnCount="4"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:rowCount="6"
+    android:stretchColumns="1"
     tools:context="com.me.wish.AddActivity">
 
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_gravity="center_vertical|end"
-        android:padding="7dp"
-        android:text="@string/titleText"
-        android:textSize="@dimen/abc_text_size_medium_material" />
+    <TableRow>
 
-    <EditText
-        android:id="@+id/titleEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="请输入标题..." />
-
-    <TextView
-        android:id="@+id/descriptionTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_gravity="center_vertical|end"
-        android:padding="7dp"
-        android:text="@string/descriptionText"
-        android:textSize="@dimen/abc_text_size_medium_material" />
-
-    <EditText
-        android:id="@+id/descriptionEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="fill_vertical"
-        android:hint="@string/descriptionTextHint"
-        android:inputType="textMultiLine" />
-
-    <TextView
-        android:id="@+id/dueDateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_gravity="center"
-        android:padding="7dp"
-        android:text="@string/dueDateEditTextHint"
-        android:textSize="@dimen/abc_text_size_medium_material" />
-
-    <EditText
-        android:id="@+id/dueDateEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="date" />
-
-    <TextView
-        android:id="@+id/childWishTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_gravity="end"
-        android:layout_rowSpan="4"
-        android:padding="7dp"
-        android:text="@string/childWishText"
-        android:textSize="@dimen/abc_text_size_medium_material" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/addChildWishImgBtn"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/ic_input_add" />
+            android:layout_gravity="center_vertical|end"
+            android:layout_weight="1"
+            android:text="@string/titleTitle"
+            android:textSize="@dimen/abc_text_size_medium_material" />
 
         <EditText
-            android:id="@+id/childWishEditText"
+            android:id="@+id/titleEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:hint="@string/titleEditTxtHint" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:id="@+id/descriptionTextView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_weight="1"
+            android:text="@string/descriptionTitle"
+            android:textSize="@dimen/abc_text_size_medium_material" />
 
-    <ListView
-        android:id="@+id/addChildWishListView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_columnSpan="3" />
+        <EditText
+            android:id="@+id/descriptionEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_vertical"
+            android:layout_weight="10"
+            android:hint="@string/descriptionTextHint"
+            android:inputType="textMultiLine" />
+    </TableRow>
 
-    <Button
-        android:id="@+id/addWishBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_columnSpan="4"
-        android:background="@color/colorPrimary"
-        android:text="@string/addWishText"
-        android:textColor="@color/abc_primary_text_material_dark"
-        android:textSize="16dp" />
+    <TableRow>
 
-</GridLayout>
-</ScrollView>
+        <TextView
+            android:id="@+id/dueDateTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_weight="1"
+            android:text="@string/dueDateEditTextHint"
+            android:textSize="@dimen/abc_text_size_medium_material" />
+
+        <EditText
+            android:id="@+id/dueDateEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:hint="@string/dueDateEditTxtHint"
+            android:inputType="date" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:id="@+id/childWishTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_weight="1"
+            android:text="@string/childWishTitle"
+            android:textSize="@dimen/abc_text_size_medium_material" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/addChildWishImgBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:background="@android:drawable/ic_input_add"
+                android:contentDescription="@string/addWishTitle" />
+
+            <EditText
+                android:id="@+id/childWishEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/childWishAddHint" />
+        </LinearLayout>
+    </TableRow>
+
+    <TableRow>
+
+        <ListView
+            android:id="@+id/addChildWishListView"
+            android:layout_width="0dp"
+            android:layout_height="180dp"
+            android:layout_column="1"
+            android:layout_weight="5" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:id="@+id/commentTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_weight="1"
+            android:text="@string/commentTitle"
+            android:textSize="@dimen/abc_text_size_medium_material" />
+
+        <EditText
+            android:id="@+id/commentEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:hint="@string/commentEditTxtHint"
+            android:inputType="textMultiLine" />
+    </TableRow>
+
+    <TableRow>
+
+        <Button
+            android:id="@+id/addWishBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_span="2"
+            android:background="@color/colorPrimary"
+            android:text="@string/addWishTitle"
+            android:textColor="@color/abc_primary_text_material_dark"
+            android:textSize="16sp" />
+    </TableRow>
+
+</TableLayout>

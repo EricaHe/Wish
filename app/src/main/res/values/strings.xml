@@ -7,10 +7,15 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_personal_center">personalCenterActivity</string>
-    <string name="titleText">标题</string>
-    <string name="descriptionText">描述</string>
+    <string name="titleTitle">标题</string>
+    <string name="descriptionTitle">描述</string>
     <string name="dueDateEditTextHint">截止日期</string>
-    <string name="addWishText">添加心愿</string>
-    <string name="childWishText">子心愿</string>
-    <string name="descriptionTextHint">请输入描述...</string>
+    <string name="addWishTitle">添加心愿</string>
+    <string name="childWishTitle">子心愿</string>
+    <string name="descriptionTextHint">请输入描述…</string>
+    <string name="childWishAddHint">请输入子心愿…</string>
+    <string name="dueDateEditTxtHint">单击以输入日期及时间</string>
+    <string name="commentEditTxtHint">请输入评论…</string>
+    <string name="commentTitle">评论</string>
+    <string name="titleEditTxtHint">请输入标题…</string>
 </resources>
