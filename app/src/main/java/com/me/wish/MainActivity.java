@@ -18,17 +18,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -78,17 +76,28 @@ public class MainActivity extends AppCompatActivity
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
         }
+
+        //show personal center
         View headerView=navigationView.getHeaderView(0);
-        TextView user_name=(TextView) headerView.findViewById(R.id.textName);
+        final EditText user_name=(EditText) headerView.findViewById(R.id.textName);
         TextView user_level=(TextView) headerView.findViewById(R.id.textLevel);
         TextView exp=(TextView) headerView.findViewById(R.id.textExp);
         user=new User(this);
         if(!user.exist()) user.addUser();
         user.readDB();
         user_name.setText(" "+user.getUserName());
-        user_level.setText("  Level:"+Integer.toString(user.getLevel()));
+        user_level.setText("  Level:" + Integer.toString(user.getLevel()));
         Log.d("aaa", "2");
-        exp.setText("  经验值："+Integer.toString(user.getCurrentExpr())+"/"+Integer.toString(user.getMaxExpr()));
+        exp.setText("  经验值：" + Integer.toString(user.getCurrentExpr()) + "/" + Integer.toString(user.getMaxExpr()));
+
+        //click to change the name
+        user_name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) user.updateUserName(user_name.getText().toString());
+            }
+        });
     }
 
     @Override
