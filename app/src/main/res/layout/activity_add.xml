@@ -1,53 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="match_parent">
+<GridLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="4"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:rowCount="6"
     tools:context="com.me.wish.AddActivity">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_gravity="center_vertical|end"
+        android:padding="7dp"
+        android:text="@string/titleText"
+        android:textSize="@dimen/abc_text_size_medium_material" />
+
+    <EditText
+        android:id="@+id/titleEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入标题..." />
+
+    <TextView
+        android:id="@+id/descriptionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_gravity="center_vertical|end"
+        android:padding="7dp"
+        android:text="@string/descriptionText"
+        android:textSize="@dimen/abc_text_size_medium_material" />
+
+    <EditText
+        android:id="@+id/descriptionEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_vertical"
+        android:hint="@string/descriptionTextHint"
+        android:inputType="textMultiLine" />
+
+    <TextView
+        android:id="@+id/dueDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_gravity="center"
+        android:padding="7dp"
+        android:text="@string/dueDateEditTextHint"
+        android:textSize="@dimen/abc_text_size_medium_material" />
+
+    <EditText
+        android:id="@+id/dueDateEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="date" />
+
+    <TextView
+        android:id="@+id/childWishTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_gravity="end"
+        android:layout_rowSpan="4"
+        android:padding="7dp"
+        android:text="@string/childWishText"
+        android:textSize="@dimen/abc_text_size_medium_material" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical"
-        android:weightSum="1">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/addChildWishImgBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/ic_input_add" />
 
         <EditText
-            android:id="@+id/titleEditText"
+            android:id="@+id/childWishEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/titleText" />
-
-        <EditText
-            android:id="@+id/descriptionEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.06"
-            android:ems="10"
-            android:hint="@string/descriptionText"
-            android:inputType="textMultiLine" />
-
-        <EditText
-            android:id="@+id/dueDateEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/dueDateEditTextHint"
-            android:inputType="date" />
-
-        <Button
-            android:id="@+id/addWishBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/addWishText"
-            android:textSize="16dp"
-            android:background="@color/colorPrimary"
-            android:textColor="@color/abc_primary_text_material_dark" />
-
+            android:layout_height="wrap_content" />
     </LinearLayout>
-</RelativeLayout>
+
+    <ListView
+        android:id="@+id/addChildWishListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_columnSpan="3" />
+
+    <Button
+        android:id="@+id/addWishBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_columnSpan="4"
+        android:background="@color/colorPrimary"
+        android:text="@string/addWishText"
+        android:textColor="@color/abc_primary_text_material_dark"
+        android:textSize="16dp" />
+
+</GridLayout>
+</ScrollView>

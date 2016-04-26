@@ -2,7 +2,6 @@ package com.me.wish;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -34,13 +33,12 @@ public class WishDBManager {
         try {
             for (Wish wish : childWishes) {
                 /* get format of date */
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
-                Object[] item = new Object[]{wish.title, wish.description, wish.parent.id,
-                        wish.comment, wish.photo_path, wish.expr,
-                        (wish.dueDate == null)?"":sdf.format(wish.dueDate),
-                        (wish.createDate == null)?"":sdf.format(wish.createDate),
-                        (wish.finishDate == null)?"":sdf.format(wish.finishDate), wish.isFinished};
-                db.execSQL("INSERT INTO child_wish VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", item);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
+                Object[] item = new Object[]{wish.title, wish.description, wish.parent.id, wish.expr,
+                        (wish.dueDate == null) ? "" : sdf.format(wish.dueDate),
+                        (wish.createDate == null) ? "" : sdf.format(wish.createDate),
+                        (wish.finishDate == null) ? "" : sdf.format(wish.finishDate), wish.isFinished};
+                db.execSQL("INSERT INTO child_wish VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?)", item);
             }
             db.setTransactionSuccessful();  //设置事务成功完成
         } finally {
@@ -52,12 +50,12 @@ public class WishDBManager {
         db.beginTransaction();  //开始事务
         try {
             /* get format of date */
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
             Object[] item = new Object[]{parentWish.title, parentWish.description, parentWish.childrenIdToString(),
                     parentWish.comment, parentWish.photo_path, parentWish.expr,
-                    (parentWish.dueDate == null)?"":sdf.format(parentWish.dueDate),
-                    (parentWish.createDate == null)?"":sdf.format(parentWish.createDate),
-                    (parentWish.finishDate == null)?"":sdf.format(parentWish.finishDate), parentWish.isFinished};
+                    (parentWish.dueDate == null) ? "" : sdf.format(parentWish.dueDate),
+                    (parentWish.createDate == null) ? "" : sdf.format(parentWish.createDate),
+                    (parentWish.finishDate == null) ? "" : sdf.format(parentWish.finishDate), parentWish.isFinished};
             db.execSQL("INSERT INTO parent_wish VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", item);
             db.setTransactionSuccessful();  //设置事务成功完成
         } finally {
@@ -73,66 +71,66 @@ public class WishDBManager {
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateDescription(String table,Wish wish) {
+    public void updateDescription(String table, Wish wish) {
         ContentValues cv = new ContentValues();
         cv.put("description", wish.description);
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateParentId(String table,Wish wish) {
+    public void updateParentId(String table, Wish wish) {
         ContentValues cv = new ContentValues();
         cv.put("parent_id", wish.parent.id);
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateChildId(String table,Wish wish) {
+    public void updateChildId(String table, Wish wish) {
         ContentValues cv = new ContentValues();
         cv.put("child_id", wish.childrenIdToString());
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateComment(String table,Wish wish) {
+    public void updateComment(Wish wish) {
         ContentValues cv = new ContentValues();
         cv.put("comment", wish.comment);
-        db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
+        db.update("parent_wish", cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updatePhotoPath(String table,Wish wish) {
+    public void updatePhotoPath(Wish wish) {
         ContentValues cv = new ContentValues();
         cv.put("photo_path", wish.photo_path.toString());
-        db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
+        db.update("parent_wish", cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateExpr(String table,Wish wish) {
+    public void updateExpr(String table, Wish wish) {
         ContentValues cv = new ContentValues();
         cv.put("expr", wish.expr);
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateDueDate(String table,Wish wish) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
+    public void updateDueDate(String table, Wish wish) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
         ContentValues cv = new ContentValues();
         cv.put("due_date", sdf.format(wish.dueDate));
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateCreateDate(String table,Wish wish) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
+    public void updateCreateDate(String table, Wish wish) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
         ContentValues cv = new ContentValues();
         cv.put("create_date", sdf.format(wish.createDate));
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateFinishDate(String table,Wish wish) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
+    public void updateFinishDate(String table, Wish wish) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
         ContentValues cv = new ContentValues();
         cv.put("finish_date", sdf.format(wish.finishDate));
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
-    public void updateIsFinished(String table, Wish wish){
+    public void updateIsFinished(String table, Wish wish) {
         ContentValues cv = new ContentValues();
-        cv.put("is_finished", (wish.isFinished)?1:0);
+        cv.put("is_finished", (wish.isFinished) ? 1 : 0);
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
@@ -140,24 +138,24 @@ public class WishDBManager {
     public void deleteWishes(String table, List<Wish> wishes) {
         // 删除子心愿后，还需更新父心愿的child_id字段
         List<Wish> parentList = new ArrayList<>();
-        if(table.equals("child_wish")){
-            for(Wish childWish : wishes){
+        if (table.equals("child_wish")) {
+            for (Wish childWish : wishes) {
                 db.delete(table, "id = ?", new String[]{Integer.toString(childWish.id)});
-                if(!parentList.contains(childWish.parent))
+                if (!parentList.contains(childWish.parent))
                     parentList.add(childWish.parent);
             }
-            for(Wish parent : parentList){
+            for (Wish parent : parentList) {
                 parent.children.removeAll(wishes);
                 updateChildId("parent_wish", parent);
             }
         }
         // 删除父心愿时，要同时删除子心愿
-        else if (table.equals("parent_wish")){
-            for (Wish parentWish:wishes){
-                for (Wish childWish:parentWish.children){
-                    db.delete("child_wish","id = ?",new String[]{Integer.toString(childWish.id)});
+        else if (table.equals("parent_wish")) {
+            for (Wish parentWish : wishes) {
+                for (Wish childWish : parentWish.children) {
+                    db.delete("child_wish", "id = ?", new String[]{Integer.toString(childWish.id)});
                 }
-                db.delete(table,"id = ?",new String[]{Integer.toString(parentWish.id)});
+                db.delete(table, "id = ?", new String[]{Integer.toString(parentWish.id)});
             }
         }
     }
@@ -171,22 +169,22 @@ public class WishDBManager {
             wish.title = c.getString(c.getColumnIndex("title"));
             wish.description = c.getString(c.getColumnIndex("description"));
             wish.comment = c.getString(c.getColumnIndex("comment"));
-            wish.photo_path = (c.getString(c.getColumnIndex("photo_path")) == null)?
-                    new String[]{""}:c.getString(c.getColumnIndex("photo_path")).split(",");
+            wish.photo_path = (c.getString(c.getColumnIndex("photo_path")) == null) ?
+                    new String[]{""} : c.getString(c.getColumnIndex("photo_path")).split(",");
             wish.expr = c.getInt(c.getColumnIndex("expr"));
 
-            for(String sChildId : c.getString(c.getColumnIndex("child_id")).split(",")){
+            for (String sChildId : c.getString(c.getColumnIndex("child_id")).split(",")) {
                 Integer childId = Integer.parseInt(sChildId);
                 wish.children.add(queryChildWishById(childId));
             }
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
-            wish.createDate = (c.getString(c.getColumnIndex("create_date")).equals(""))?
-                    null:sdf.parse(c.getString(c.getColumnIndex("create_date")));
-            wish.dueDate = (c.getString(c.getColumnIndex("due_date")).equals(""))?
-                    null:sdf.parse(c.getString(c.getColumnIndex("due_date")));
-            wish.finishDate = (c.getString(c.getColumnIndex("finish_date")).equals(""))?
-                    null:sdf.parse(c.getString(c.getColumnIndex("finish_date")));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
+            wish.createDate = (c.getString(c.getColumnIndex("create_date")).equals("")) ?
+                    null : sdf.parse(c.getString(c.getColumnIndex("create_date")));
+            wish.dueDate = (c.getString(c.getColumnIndex("due_date")).equals("")) ?
+                    null : sdf.parse(c.getString(c.getColumnIndex("due_date")));
+            wish.finishDate = (c.getString(c.getColumnIndex("finish_date")).equals("")) ?
+                    null : sdf.parse(c.getString(c.getColumnIndex("finish_date")));
 
             wish.isFinished = c.getInt(c.getColumnIndex("is_finished")) == 1;
         }
@@ -201,20 +199,17 @@ public class WishDBManager {
             wish.id = id;
             wish.title = c.getString(c.getColumnIndex("title"));
             wish.description = c.getString(c.getColumnIndex("description"));
-            wish.comment = c.getString(c.getColumnIndex("comment"));
-            wish.photo_path = (c.getString(c.getColumnIndex("photo_path")) == null)?
-                    new String[]{""}:c.getString(c.getColumnIndex("photo_path")).split(",");
             wish.expr = c.getInt(c.getColumnIndex("expr"));
 
             wish.parent = queryParentWishById(c.getInt(c.getColumnIndex("parent_id")));
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
-            wish.createDate = (c.getString(c.getColumnIndex("create_date")).equals(""))?
-                    null:sdf.parse(c.getString(c.getColumnIndex("create_date")));
-            wish.dueDate = (c.getString(c.getColumnIndex("due_date")).equals(""))?
-                    null:sdf.parse(c.getString(c.getColumnIndex("due_date")));
-            wish.finishDate = (c.getString(c.getColumnIndex("finish_date")).equals(""))?
-                    null:sdf.parse(c.getString(c.getColumnIndex("finish_date")));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
+            wish.createDate = (c.getString(c.getColumnIndex("create_date")).equals("")) ?
+                    null : sdf.parse(c.getString(c.getColumnIndex("create_date")));
+            wish.dueDate = (c.getString(c.getColumnIndex("due_date")).equals("")) ?
+                    null : sdf.parse(c.getString(c.getColumnIndex("due_date")));
+            wish.finishDate = (c.getString(c.getColumnIndex("finish_date")).equals("")) ?
+                    null : sdf.parse(c.getString(c.getColumnIndex("finish_date")));
 
             wish.isFinished = c.getInt(c.getColumnIndex("is_finished")) == 1;
         }
@@ -231,17 +226,17 @@ public class WishDBManager {
             wish.title = c.getString(c.getColumnIndex("title"));
             wish.description = c.getString(c.getColumnIndex("description"));
             wish.comment = c.getString(c.getColumnIndex("comment"));
-            wish.photo_path = (c.getString(c.getColumnIndex("photo_path")) == null)?
-                    new String[]{""}:c.getString(c.getColumnIndex("photo_path")).split(",");
+            wish.photo_path = (c.getString(c.getColumnIndex("photo_path")) == null) ?
+                    new String[]{""} : c.getString(c.getColumnIndex("photo_path")).split(",");
             wish.expr = c.getInt(c.getColumnIndex("expr"));
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
-            wish.createDate = (c.getString(c.getColumnIndex("create_date")).equals(""))?
-                    null:sdf.parse(c.getString(c.getColumnIndex("create_date")));
-            wish.dueDate = (c.getString(c.getColumnIndex("due_date")).equals(""))?
-                    null:sdf.parse(c.getString(c.getColumnIndex("due_date")));
-            wish.finishDate = (c.getString(c.getColumnIndex("finish_date")).equals(""))?
-                    null:sdf.parse(c.getString(c.getColumnIndex("finish_date")));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
+            wish.createDate = (c.getString(c.getColumnIndex("create_date")).equals("")) ?
+                    null : sdf.parse(c.getString(c.getColumnIndex("create_date")));
+            wish.dueDate = (c.getString(c.getColumnIndex("due_date")).equals("")) ?
+                    null : sdf.parse(c.getString(c.getColumnIndex("due_date")));
+            wish.finishDate = (c.getString(c.getColumnIndex("finish_date")).equals("")) ?
+                    null : sdf.parse(c.getString(c.getColumnIndex("finish_date")));
 
             wish.isFinished = c.getInt(c.getColumnIndex("is_finished")) == 1;
 
@@ -259,19 +254,16 @@ public class WishDBManager {
             wish.id = c.getInt(c.getColumnIndex("id"));
             wish.title = c.getString(c.getColumnIndex("title"));
             wish.description = c.getString(c.getColumnIndex("description"));
-            wish.comment = c.getString(c.getColumnIndex("comment"));
-            wish.photo_path = (c.getString(c.getColumnIndex("photo_path")) == null)?
-                    new String[]{""}:c.getString(c.getColumnIndex("photo_path")).split(",");
             wish.expr = c.getInt(c.getColumnIndex("expr"));
             wish.parent = queryParentWishById(c.getInt(c.getColumnIndex("parent_id")));
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.CHINA);
-            wish.createDate = (c.getString(c.getColumnIndex("create_date")).equals(""))?
-                    null:sdf.parse(c.getString(c.getColumnIndex("create_date")));
-            wish.dueDate = (c.getString(c.getColumnIndex("due_date")).equals(""))?
-                    null:sdf.parse(c.getString(c.getColumnIndex("due_date")));
-            wish.finishDate = (c.getString(c.getColumnIndex("finish_date")).equals(""))?
-                    null:sdf.parse(c.getString(c.getColumnIndex("finish_date")));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
+            wish.createDate = (c.getString(c.getColumnIndex("create_date")).equals("")) ?
+                    null : sdf.parse(c.getString(c.getColumnIndex("create_date")));
+            wish.dueDate = (c.getString(c.getColumnIndex("due_date")).equals("")) ?
+                    null : sdf.parse(c.getString(c.getColumnIndex("due_date")));
+            wish.finishDate = (c.getString(c.getColumnIndex("finish_date")).equals("")) ?
+                    null : sdf.parse(c.getString(c.getColumnIndex("finish_date")));
 
             wish.isFinished = c.getInt(c.getColumnIndex("is_finished")) == 1;
 

@@ -9,6 +9,8 @@
     <string name="title_activity_personal_center">personalCenterActivity</string>
     <string name="titleText">标题</string>
     <string name="descriptionText">描述</string>
-    <string name="dueDateEditTextHint">选择截止日期</string>
+    <string name="dueDateEditTextHint">截止日期</string>
     <string name="addWishText">添加心愿</string>
+    <string name="childWishText">子心愿</string>
+    <string name="descriptionTextHint">请输入描述...</string>
 </resources>

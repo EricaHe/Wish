@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
         childWishes = new ArrayList<List<Wish>>();
 
         wishes = dbm.queryAllParentWishes();
-        for(Wish wish : wishes){
+        for (Wish wish : wishes) {
             childWishes.add(dbm.queryChildWishesByParent(wish));
         }
     }
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Log.d("on create","begin");
+        Log.d("on create", "begin");
 
         wishMgr = new WishDBManager(this);
 
