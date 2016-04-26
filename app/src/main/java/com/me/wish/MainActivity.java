@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     private List<Wish> wishes;
     private List<List<Wish>> childWishes;
     private WishDBManager wishMgr;
+    private User user;
 
     protected void dataInitialization(WishDBManager dbm) throws ParseException {
         wishes = new ArrayList<Wish>();
@@ -119,6 +120,17 @@ public class MainActivity extends AppCompatActivity
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
         }
+        View headerView=navigationView.getHeaderView(0);
+        TextView user_name=(TextView) headerView.findViewById(R.id.textName);
+        TextView user_level=(TextView) headerView.findViewById(R.id.textLevel);
+        TextView exp=(TextView) headerView.findViewById(R.id.textExp);
+        user=new User(this);
+        if(!user.exist()) user.addUser();
+        user.readDB();
+        user_name.setText(" "+user.getUserName());
+        user_level.setText("  Level:"+Integer.toString(user.getLevel()));
+        Log.d("aaa", "2");
+        exp.setText("  经验值："+Integer.toString(user.getCurrentExpr())+"/"+Integer.toString(user.getMaxExpr()));
     }
 
     @Override
@@ -126,6 +138,7 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
         //应用的最后一个Activity关闭时应释放DB
         wishMgr.closeDB();
+        user.closeDB();
     }
 
     // TODO:子菜单为空会强退，要对子心愿长度做检查
@@ -345,21 +358,11 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-            Intent intent = new Intent(MainActivity.this, PersonalCenterActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_slideshow) {
+        if (id == R.id.nav_achieve) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_star) {
 
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer != null) {
             drawer.closeDrawer(GravityCompat.START);

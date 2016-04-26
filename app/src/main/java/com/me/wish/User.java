@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * Created by zhangyy on 2016/4/23.
@@ -33,24 +34,26 @@ public class User {
     }
 
     public void addUser()
-    {
+    {   Log.d("1234","5");
         ContentValues values = new ContentValues();
         values.put("_id",1);
-        values.put("name","无名小卒");
+        values.put("name","请输入姓名");
         values.put("level",0);
         values.put("current_expr",0);
         values.put("max_expr",10);
-        values.put("honors","初出茅庐");
-        db.insert("user",null,values);
+        values.put("honors", "初出茅庐");
+        db.insert("user", null, values);
     }
 
     public void readDB()
     {
-        name=cursor.getString(cursor.getColumnIndex("name"));
-        level=cursor.getInt(cursor.getColumnIndex("level"));
-        current_expr=cursor.getInt(cursor.getColumnIndex("current_expr"));
-        max_expr=cursor.getInt(cursor.getColumnIndex("max_expr"));
-        honors=cursor.getString(cursor.getColumnIndex("honors"));
+        if(cursor.moveToFirst()) {
+            name = cursor.getString(cursor.getColumnIndex("name"));
+            level = cursor.getInt(cursor.getColumnIndex("level"));
+            current_expr = cursor.getInt(cursor.getColumnIndex("current_expr"));
+            max_expr = cursor.getInt(cursor.getColumnIndex("max_expr"));
+            honors = cursor.getString(cursor.getColumnIndex("honors"));
+        }
     }
 
     //get information
@@ -120,6 +123,11 @@ public class User {
         ContentValues values = new ContentValues();
         values.put("honors",honors);
         db.update("user",values,null,null);
+    }
+
+    public void closeDB()
+    {
+        db.close();
     }
 
 
