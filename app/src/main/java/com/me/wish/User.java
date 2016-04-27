@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 /**
  * Created by zhangyy on 2016/4/23.
@@ -34,15 +33,16 @@ public class User {
     }
 
     public void addUser()
-    {   Log.d("1234","5");
+    {
         ContentValues values = new ContentValues();
         values.put("_id",1);
         values.put("name","请输入姓名");
         values.put("level",0);
         values.put("current_expr",0);
         values.put("max_expr",10);
-        values.put("honors", "初出茅庐");
+        values.put("honors", "太空菜鸟");
         db.insert("user", null, values);
+        cursor = db.query("user", null, null, null, null, null, null);
     }
 
     public void readDB()

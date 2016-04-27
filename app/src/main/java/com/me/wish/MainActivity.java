@@ -50,6 +50,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void showPersonalCenter(){
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,12 +95,13 @@ public class MainActivity extends AppCompatActivity
         user=new User(this);
         if(!user.exist()) user.addUser();
         user.readDB();
+        Log.d("12345","huhuhu");
+        String s=user.getUserName();
         user_name.setText(" "+user.getUserName());
         user_level.setText("  Level:" + Integer.toString(user.getLevel()));
-        Log.d("aaa", "2");
         exp.setText("  经验值：" + Integer.toString(user.getCurrentExpr()) + "/" + Integer.toString(user.getMaxExpr()));
 
-        //click to change the name
+        //update the name
         user_name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
 
@@ -200,7 +205,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_achieve) {
-
+            Intent intent = new Intent(MainActivity.this,AchieveActivity.class);
+            intent.putExtra("achieve",user.getHonors());
+            startActivity(intent);
         } else if (id == R.id.nav_star) {
 
         }

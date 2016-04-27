@@ -21,8 +21,9 @@
         <activity
             android:name=".DetailActivity"
             android:label="Wish+"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".AddActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".AddActivity" />
+        <activity android:name=".AchieveActivity"></activity>
     </application>
 
 </manifest>

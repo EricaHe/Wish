@@ -17,8 +17,8 @@
         android:layout_height="100dp"
         android:src="@mipmap/initialhead"
         android:scaleType="centerCrop"
-        android:layout_above="@+id/textView"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/textView7" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -49,20 +49,11 @@
         android:textSize="18dp" />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:textSize="18dp"
-        android:layout_above="@+id/textView7"
-        android:layout_alignParentStart="true" />
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="当前称号："
         android:id="@+id/textView7"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentStart="false"
         android:textSize="18dp"
         android:textColor="#fbfbfd" />
 
