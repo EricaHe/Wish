@@ -28,7 +28,6 @@ public class AddActivity extends AppCompatActivity {
     private EditText titleEditTxt;
     private EditText descriptionEditTxt;
     private EditText commentEditTxt;
-    private Button addWishBtn;
 
     private WishDBManager wishMgr;
 
@@ -85,53 +84,55 @@ public class AddActivity extends AppCompatActivity {
             }
         });
 
-        addWishBtn = (Button) findViewById(R.id.addWishBtn);
+        Button addWishBtn = (Button) findViewById(R.id.addWishBtn);
         titleEditTxt = (EditText) findViewById(R.id.titleEditText);
         descriptionEditTxt = (EditText) findViewById(R.id.descriptionEditText);
         commentEditTxt = (EditText) findViewById(R.id.commentEditText);
-        addWishBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
-                    String title = titleEditTxt.getText().toString();
-                    String description = descriptionEditTxt.getText().toString();
-                    String comment = commentEditTxt.getText().toString();
-                    Date dueDate = (dueDateTime.getText().toString().equals("")) ?
-                            null : sdf.parse(dueDateTime.getText().toString());
-                    Date createDate = new Date();
-                    Wish parentWish = new Wish(title, description, dueDate, createDate);
-                    parentWish.comment = comment;
+        if (addWishBtn != null) {
+            addWishBtn.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
+                        String title = titleEditTxt.getText().toString();
+                        String description = descriptionEditTxt.getText().toString();
+                        String comment = commentEditTxt.getText().toString();
+                        Date dueDate = (dueDateTime.getText().toString().equals("")) ?
+                                null : sdf.parse(dueDateTime.getText().toString());
+                        Date createDate = new Date();
+                        Wish parentWish = new Wish(title, description, dueDate, createDate);
+                        parentWish.comment = comment;
 
-                    // add parent wish into database(without children ids)
-                    int parentId = wishMgr.addParentWishReturnId(parentWish);
+                        // add parent wish into database(without children ids)
+                        int parentId = wishMgr.addParentWishReturnId(parentWish);
 
-                    List<Wish> childrenWish = new ArrayList<Wish>();
-                    // add parent id to children wishes
-                    for (String childTitle : childWish) {
-                        Wish tempWish = new Wish(childTitle);
-                        tempWish.parent_id = parentId;
-                        childrenWish.add(tempWish);
+                        List<Wish> childrenWish = new ArrayList<Wish>();
+                        // add parent id to children wishes
+                        for (String childTitle : childWish) {
+                            Wish tempWish = new Wish(childTitle);
+                            tempWish.parent_id = parentId;
+                            childrenWish.add(tempWish);
+                        }
+                        // add children wishes into database(with parent id)
+                        wishMgr.addChildWishes(childrenWish);
+
+                        // update parent wish's children ids
+                        childrenWish.clear();
+                        childrenWish = wishMgr.queryChildWishesByParentId(parentId);
+                        String sChildrenWishIds = "";
+                        for (Wish child : childrenWish) {
+                            sChildrenWishIds = sChildrenWishIds + "," + Integer.toString(child.id);
+                        }
+                        sChildrenWishIds = sChildrenWishIds.substring(1);
+                        wishMgr.updateChildIdByParentId(sChildrenWishIds, parentId);
+
+                        wishMgr.closeDB();
+                        finish();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
-                    // add children wishes into database(with parent id)
-                    wishMgr.addChildWishes(childrenWish);
-
-                    // update parent wish's children ids
-                    childrenWish.clear();
-                    childrenWish = wishMgr.queryChildWishesByParentId(parentId);
-                    String sChildrenWishIds = "";
-                    for (Wish child : childrenWish) {
-                        sChildrenWishIds = sChildrenWishIds + "," + Integer.toString(child.id);
-                    }
-                    sChildrenWishIds = sChildrenWishIds.substring(1);
-                    wishMgr.updateChildIdByParentId(sChildrenWishIds, parentId);
-
-                    wishMgr.closeDB();
-                    finish();
-                } catch (ParseException e) {
-                    e.printStackTrace();
                 }
-            }
-        });
+            });
+        }
     }
 
 }

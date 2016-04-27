@@ -9,6 +9,7 @@ import android.util.Log;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -180,14 +181,27 @@ public class WishDBManager {
     public void updateFinishDate(String table, Wish wish) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
         ContentValues cv = new ContentValues();
-        cv.put("finish_date", sdf.format(wish.finishDate));
+        cv.put("finish_date", (wish.finishDate == null) ? "":sdf.format(wish.finishDate));
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
+    }
+
+    public void updateFinishDateById(String table, Integer wishId, Date finishDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
+        ContentValues cv = new ContentValues();
+        cv.put("finish_date", (finishDate == null) ? "":sdf.format(finishDate));
+        db.update(table, cv, "id = ?", new String[]{Integer.toString(wishId)});
     }
 
     public void updateIsFinished(String table, Wish wish) {
         ContentValues cv = new ContentValues();
         cv.put("is_finished", (wish.isFinished) ? 1 : 0);
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
+    }
+
+    public void updateIsFinishedById(String table, Integer wishId, Integer isFinished) {
+        ContentValues cv = new ContentValues();
+        cv.put("is_finished", isFinished);
+        db.update(table, cv, "id = ?", new String[]{Integer.toString(wishId)});
     }
 
     // delete part
@@ -337,6 +351,18 @@ public class WishDBManager {
         }
         c.close();
         return wishes;
+    }
+
+    public boolean queryIsFinishedById(String table, Integer id){
+        boolean result;
+        Cursor c = db.rawQuery("SELECT * FROM "+table+" where id = ?", new String[]{Integer.toString(id)});
+        if(c.moveToFirst()){
+            result = c.getInt(c.getColumnIndex("is_finished")) == 1;
+        } else {
+            result = Boolean.parseBoolean(null);
+        }
+        c.close();
+        return result;
     }
 
     public void closeDB() {
