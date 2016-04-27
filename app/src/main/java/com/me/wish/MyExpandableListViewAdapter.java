@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,10 +44,10 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
         this.wishDBM = wishMgr;
 
         // initialize
-        for(List<Wish> child : childWishes){
+        for (List<Wish> child : childWishes) {
             SparseBooleanArray sba = new SparseBooleanArray();
-            for (int i = 0; i<child.size();i++){
-                sba.append(i, wishDBM.queryIsFinishedById("child_wish",child.get(i).id));
+            for (int i = 0; i < child.size(); i++) {
+                sba.append(i, wishDBM.queryIsFinishedById("child_wish", child.get(i).id));
             }
             isSelected.add(sba);
         }
@@ -150,11 +151,13 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         GroupHolder groupHolder = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.wish_expand_list, null);
             groupHolder = new GroupHolder();
             groupHolder.txt = (TextView) convertView.findViewById(R.id.wishItemTxtView);
             groupHolder.img = (ImageView) convertView.findViewById(R.id.wishItemCaret);
+            groupHolder.date = (TextView) convertView.findViewById(R.id.dueDateOfParent);
             convertView.setTag(groupHolder);
         } else
             groupHolder = (GroupHolder) convertView.getTag();
@@ -165,6 +168,7 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
             groupHolder.img.setBackgroundResource(android.R.drawable.arrow_up_float);
 
         groupHolder.txt.setText(wishes.get(groupPosition).title);
+        groupHolder.date.setText(sdf.format(wishes.get(groupPosition).dueDate));
         return convertView;
     }
 
@@ -193,7 +197,7 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
             itemHolder = (ItemHolder) convertView.getTag();
         }
         itemHolder.txt.setText(childWishes.get(groupPosition).get(childPosition).title);
-        if(isSelected.get(groupPosition).get(childPosition)){
+        if (isSelected.get(groupPosition).get(childPosition)) {
             itemHolder.checkBox.setChecked(true);
             itemHolder.txt.getPaint().setStrikeThruText(true);
             itemHolder.txt.setTextColor(0xffbdbdbd);
@@ -206,20 +210,26 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
         itemHolder.checkBox.setOnClickListener(new ExpandableListView.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isSelected.get(groupPosition).get(childPosition)){
+                if (isSelected.get(groupPosition).get(childPosition)) {
                     // not finished yet
                     isSelected.get(groupPosition).put(childPosition, false);
                     finalItemHolder.txt.getPaint().setStrikeThruText(false);
                     finalItemHolder.txt.setTextColor(0xff616161);
                     wishDBM.updateIsFinishedById("child_wish", childWishes.get(groupPosition).get(childPosition).id, 0);
                     wishDBM.updateFinishDateById("child_wish", childWishes.get(groupPosition).get(childPosition).id, null);
-                }else{
-                    // is finished
-                    isSelected.get(groupPosition).put(childPosition, true);
-                    finalItemHolder.txt.getPaint().setStrikeThruText(true);
-                    finalItemHolder.txt.setTextColor(0xffbdbdbd);
-                    wishDBM.updateIsFinishedById("child_wish", childWishes.get(groupPosition).get(childPosition).id, 1);
-                    wishDBM.updateFinishDateById("child_wish", childWishes.get(groupPosition).get(childPosition).id, new Date());
+                } else {
+                    if (childWishes.get(groupPosition).get(childPosition).isDaily) {
+                        Toast.makeText(MainActivity.mAct, "增加10点经验", Toast.LENGTH_SHORT).show();
+                        // TODO:为用户增加10点经验
+                    } else {
+                        // is finished
+                        isSelected.get(groupPosition).put(childPosition, true);
+                        finalItemHolder.txt.getPaint().setStrikeThruText(true);
+                        finalItemHolder.txt.setTextColor(0xffbdbdbd);
+                        wishDBM.updateIsFinishedById("child_wish", childWishes.get(groupPosition).get(childPosition).id, 1);
+                        wishDBM.updateFinishDateById("child_wish", childWishes.get(groupPosition).get(childPosition).id,
+                                new Date());
+                    }
                 }
                 notifyDataSetChanged();
             }
@@ -246,6 +256,7 @@ class GroupHolder {
     public TextView txt;
     public ImageView img;
     public CheckBox chkBox;
+    public TextView date;
 }
 
 class ItemHolder {

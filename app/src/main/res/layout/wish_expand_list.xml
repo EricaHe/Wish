@@ -6,19 +6,38 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/wishItemTxtView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#ff616161"/>
+            android:textColor="#ff616161"
+            android:textSize="18sp"
+            android:text = "xxxxxx"/>
 
-        <ImageView
-            android:id="@+id/wishItemCaret"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/dueDateOfParent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/wishItemCaret"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginStart="5dp"/>
+
+        </LinearLayout>
+
+
     </RelativeLayout>
 </LinearLayout>

@@ -3,8 +3,11 @@ package com.me.wish;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -31,7 +34,8 @@ public class AddActivity extends AppCompatActivity {
 
     private WishDBManager wishMgr;
 
-    private List<String> childWish = new ArrayList<String>();
+    private List<Wish> childWish = new ArrayList<Wish>();
+    private List<String> childWishTitle = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,22 +45,31 @@ public class AddActivity extends AppCompatActivity {
         wishMgr = new WishDBManager(this);
 
         childWishListView = (ListView) findViewById(R.id.addChildWishListView);
-        childWishListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_checked,
-                childWish));
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_checked,
+                childWishTitle);
+        childWishListView.setAdapter(adapter);
+        childWishListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+        childWishListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                childWish.get(position).isDaily = childWishListView.isItemChecked(position);
+            }
+        });
 
         ImageButton addChildWishImgBtn = (ImageButton) findViewById(R.id.addChildWishImgBtn);
         childWishEditTxt = (EditText) findViewById(R.id.childWishEditText);
         if (addChildWishImgBtn != null) {
             addChildWishImgBtn.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    String extraWish = childWishEditTxt.getText().toString();
-                    if (extraWish.equals("")) {
+                    String extraWishTitle = childWishEditTxt.getText().toString();
+                    if (extraWishTitle.equals("")) {
                         Toast noEmptyHint = Toast.makeText(AddActivity.this, "心愿不能为空", Toast.LENGTH_SHORT);
                         noEmptyHint.show();
                     } else {
-                        childWish.add(extraWish);
-                        childWishListView.setAdapter(new ArrayAdapter<String>(AddActivity.this,
-                                android.R.layout.simple_list_item_checked, childWish));
+                        childWishTitle.add(extraWishTitle);
+                        childWish.add(new Wish(extraWishTitle));
+                        adapter.notifyDataSetChanged();
                         childWishEditTxt.setText("");
                     }
                 }
@@ -107,10 +120,9 @@ public class AddActivity extends AppCompatActivity {
 
                         List<Wish> childrenWish = new ArrayList<Wish>();
                         // add parent id to children wishes
-                        for (String childTitle : childWish) {
-                            Wish tempWish = new Wish(childTitle);
-                            tempWish.parent_id = parentId;
-                            childrenWish.add(tempWish);
+                        for (Wish child : childWish) {
+                            child.parent_id = parentId;
+                            childrenWish.add(child);
                         }
                         // add children wishes into database(with parent id)
                         wishMgr.addChildWishes(childrenWish);

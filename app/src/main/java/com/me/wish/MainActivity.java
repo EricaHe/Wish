@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity
     private WishDBManager wishMgr;
     private User user;
 
+    public static MainActivity mAct;
 
     protected void dataInitialization(WishDBManager dbm) throws ParseException {
         wishes = new ArrayList<Wish>();
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mAct = this;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {

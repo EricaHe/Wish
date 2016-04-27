@@ -24,6 +24,7 @@ public class Wish {
     public Date finishDate;
 
     public boolean isFinished;
+    public boolean isDaily;
 
     public Wish(String title) {
         this.title = title;
@@ -41,6 +42,7 @@ public class Wish {
         this.finishDate = null;
 
         this.isFinished = false;
+        this.isDaily = false;
     }
 
     public Wish() {
@@ -59,6 +61,7 @@ public class Wish {
         this.finishDate = null;
 
         this.isFinished = false;
+        this.isDaily = false;
     }
 
     public Wish(String title, String description, Date dueDate, Date createDate) {
@@ -77,6 +80,7 @@ public class Wish {
         this.finishDate = null;
 
         this.isFinished = false;
+        this.isDaily = false;
     }
 
     public Wish(String title, String description, Date dueDate, Date createDate, Integer parent_id, List<Integer> children_ids) {
@@ -95,6 +99,7 @@ public class Wish {
         this.finishDate = null;
 
         this.isFinished = false;
+        this.isDaily = false;
     }
 
     public String childrenIdToString() {

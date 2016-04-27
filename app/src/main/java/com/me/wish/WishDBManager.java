@@ -39,8 +39,9 @@ public class WishDBManager {
                 Object[] item = new Object[]{wish.title, wish.description, wish.parent_id, wish.expr,
                         (wish.dueDate == null) ? "" : sdf.format(wish.dueDate),
                         (wish.createDate == null) ? "" : sdf.format(wish.createDate),
-                        (wish.finishDate == null) ? "" : sdf.format(wish.finishDate), wish.isFinished};
-                db.execSQL("INSERT INTO child_wish VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?)", item);
+                        (wish.finishDate == null) ? "" : sdf.format(wish.finishDate),
+                        (wish.isFinished) ? 1 : 0, (wish.isDaily) ? 1 : 0};
+                db.execSQL("INSERT INTO child_wish VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?, ?)", item);
             }
             db.setTransactionSuccessful();  //设置事务成功完成
         } finally {
@@ -58,8 +59,9 @@ public class WishDBManager {
                 Object[] item = new Object[]{wish.title, wish.description, wish.parent_id, wish.expr,
                         (wish.dueDate == null) ? "" : sdf.format(wish.dueDate),
                         (wish.createDate == null) ? "" : sdf.format(wish.createDate),
-                        (wish.finishDate == null) ? "" : sdf.format(wish.finishDate), wish.isFinished};
-                db.execSQL("INSERT INTO child_wish VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?)", item);
+                        (wish.finishDate == null) ? "" : sdf.format(wish.finishDate),
+                        (wish.isFinished) ? 1 : 0, (wish.isDaily) ? 1 : 0};
+                db.execSQL("INSERT INTO child_wish VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?, ?)", item);
                 Cursor cursor = db.rawQuery("select last_insert_rowid() from parent_wish", null);
                 if (cursor.moveToFirst())
                     newChildrenIds.add(cursor.getInt(0));
@@ -82,7 +84,8 @@ public class WishDBManager {
                     parentWish.comment, parentWish.photo_path, parentWish.expr,
                     (parentWish.dueDate == null) ? "" : sdf.format(parentWish.dueDate),
                     (parentWish.createDate == null) ? "" : sdf.format(parentWish.createDate),
-                    (parentWish.finishDate == null) ? "" : sdf.format(parentWish.finishDate), parentWish.isFinished};
+                    (parentWish.finishDate == null) ? "" : sdf.format(parentWish.finishDate),
+                    (parentWish.isFinished) ? 1 : 0};
             db.execSQL("INSERT INTO parent_wish VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", item);
             Cursor cursor = db.rawQuery("select last_insert_rowid() from parent_wish", null);
             if (cursor.moveToFirst())
@@ -106,7 +109,8 @@ public class WishDBManager {
                     parentWish.comment, parentWish.photo_path, parentWish.expr,
                     (parentWish.dueDate == null) ? "" : sdf.format(parentWish.dueDate),
                     (parentWish.createDate == null) ? "" : sdf.format(parentWish.createDate),
-                    (parentWish.finishDate == null) ? "" : sdf.format(parentWish.finishDate), parentWish.isFinished};
+                    (parentWish.finishDate == null) ? "" : sdf.format(parentWish.finishDate),
+                    (parentWish.isFinished) ? 1 : 0};
             db.execSQL("INSERT INTO parent_wish VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", item);
             db.setTransactionSuccessful();  //设置事务成功完成
         } finally {
@@ -181,14 +185,14 @@ public class WishDBManager {
     public void updateFinishDate(String table, Wish wish) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
         ContentValues cv = new ContentValues();
-        cv.put("finish_date", (wish.finishDate == null) ? "":sdf.format(wish.finishDate));
+        cv.put("finish_date", (wish.finishDate == null) ? "" : sdf.format(wish.finishDate));
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 
     public void updateFinishDateById(String table, Integer wishId, Date finishDate) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
         ContentValues cv = new ContentValues();
-        cv.put("finish_date", (finishDate == null) ? "":sdf.format(finishDate));
+        cv.put("finish_date", (finishDate == null) ? "" : sdf.format(finishDate));
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wishId)});
     }
 
@@ -202,6 +206,12 @@ public class WishDBManager {
         ContentValues cv = new ContentValues();
         cv.put("is_finished", isFinished);
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wishId)});
+    }
+
+    public void updateIsDailyById(Integer wishId, Integer isDaily) {
+        ContentValues cv = new ContentValues();
+        cv.put("is_daily", isDaily);
+        db.update("child_wish", cv, "id = ?", new String[]{Integer.toString(wishId)});
     }
 
     // delete part
@@ -292,6 +302,7 @@ public class WishDBManager {
                     null : sdf.parse(c.getString(c.getColumnIndex("finish_date")));
 
             wish.isFinished = c.getInt(c.getColumnIndex("is_finished")) == 1;
+            wish.isDaily = c.getInt(c.getColumnIndex("is_daily")) == 1;
         }
         c.close();
         return wish;
@@ -346,6 +357,7 @@ public class WishDBManager {
                     null : sdf.parse(c.getString(c.getColumnIndex("finish_date")));
 
             wish.isFinished = c.getInt(c.getColumnIndex("is_finished")) == 1;
+            wish.isDaily = c.getInt(c.getColumnIndex("is_daily")) == 1;
 
             wishes.add(wish);
         }
@@ -353,10 +365,10 @@ public class WishDBManager {
         return wishes;
     }
 
-    public boolean queryIsFinishedById(String table, Integer id){
+    public boolean queryIsFinishedById(String table, Integer id) {
         boolean result;
-        Cursor c = db.rawQuery("SELECT * FROM "+table+" where id = ?", new String[]{Integer.toString(id)});
-        if(c.moveToFirst()){
+        Cursor c = db.rawQuery("SELECT * FROM " + table + " where id = ?", new String[]{Integer.toString(id)});
+        if (c.moveToFirst()) {
             result = c.getInt(c.getColumnIndex("is_finished")) == 1;
         } else {
             result = Boolean.parseBoolean(null);
