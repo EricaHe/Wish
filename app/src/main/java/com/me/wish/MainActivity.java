@@ -96,13 +96,13 @@ public class MainActivity extends AppCompatActivity
             @Override
 
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) user.updateUserName(user_name.getText().toString());
+                if (!hasFocus) user.updateUserName(user_name.getText().toString());
             }
         });
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         wishMgr = new WishDBManager(this);
         try {
@@ -151,8 +151,6 @@ public class MainActivity extends AppCompatActivity
         wishMgr.closeDB();
         user.closeDB();
     }
-
-
 
     @Override
     public void onBackPressed() {
