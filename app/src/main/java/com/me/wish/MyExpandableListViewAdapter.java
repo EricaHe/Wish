@@ -1,8 +1,6 @@
 package com.me.wish;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -15,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,7 +30,6 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
     private List<Wish> wishes;
     private List<List<Wish>> childWishes;
     private WishDBManager wishDBM;
-    private User user;
 
     public MyExpandableListViewAdapter(Context context, List<Wish> wishes, List<List<Wish>> childWishes,
                                        WishDBManager wishMgr) {
@@ -42,8 +38,6 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
         this.childWishes = childWishes;
         this.isSelected = new ArrayList<SparseBooleanArray>();
         this.wishDBM = wishMgr;
-        this.user=new User(context);
-        if(!user.exist()) user.addUser();
 
         // initialize
         for (List<Wish> child : childWishes) {
@@ -225,79 +219,20 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
                     finalItemHolder.txt.getPaint().setStrikeThruText(false);
                     finalItemHolder.txt.setTextColor(0xff616161);
                     wishDBM.updateIsFinishedById("child_wish", childWishes.get(groupPosition).get(childPosition).id, 0);
-                    childWishes.get(groupPosition).get(childPosition).isFinished=false;
                     wishDBM.updateFinishDateById("child_wish", childWishes.get(groupPosition).get(childPosition).id, null);
-                    childWishes.get(groupPosition).get(childPosition).finishDate=null;
-
-                    Toast.makeText(MainActivity.mAct, "减少10点经验", Toast.LENGTH_SHORT).show();
-                    user.updateCurrentExpr(user.getCurrentExpr() - childWishes.get(groupPosition).get(childPosition).expr);
-                    int level=user.getLevel();
-                    if(user.getCurrentExpr()<level*level*10)
-                    {
-                        user.updateLevel(level-1);
-                        user.updateMaxExpr(level*level*10);
-                    }
-
                 } else {
+                    Log.d("getfinish", "222");
                     if (childWishes.get(groupPosition).get(childPosition).isDaily) {
-                        DateFormat df = DateFormat.getDateInstance();
-                        Date currentDate = new Date();
-                        if(!childWishes.get(groupPosition).get(childPosition).isFinished||
-                                df.format(childWishes.get(groupPosition).get(childPosition).finishDate)!=df.format(currentDate))
-                        {
-                            Log.d("11111",String.valueOf(!childWishes.get(groupPosition).get(childPosition).isFinished));
-                            Toast.makeText(MainActivity.mAct, "增加10点经验", Toast.LENGTH_SHORT).show();
-                            user.updateCurrentExpr(user.getCurrentExpr() + childWishes.get(groupPosition).get(childPosition).expr);
-                            wishDBM.updateIsFinishedById("child_wish", childWishes.get(groupPosition).get(childPosition).id, 1);
-                            childWishes.get(groupPosition).get(childPosition).isFinished=true;
-                            wishDBM.updateFinishDateById("child_wish", childWishes.get(groupPosition).get(childPosition).id,
-                                    currentDate);
-                            childWishes.get(groupPosition).get(childPosition).finishDate=currentDate;
-                        }
+                        Toast.makeText(MainActivity.mAct, "增加10点经验", Toast.LENGTH_SHORT).show();
+                        // TODO:为用户增加10点经验
                     } else {
                         // is finished
                         isSelected.get(groupPosition).put(childPosition, true);
                         finalItemHolder.txt.getPaint().setStrikeThruText(true);
                         finalItemHolder.txt.setTextColor(0xffbdbdbd);
                         wishDBM.updateIsFinishedById("child_wish", childWishes.get(groupPosition).get(childPosition).id, 1);
-                        childWishes.get(groupPosition).get(childPosition).isFinished=true;
                         wishDBM.updateFinishDateById("child_wish", childWishes.get(groupPosition).get(childPosition).id,
                                 new Date());
-                        childWishes.get(groupPosition).get(childPosition).finishDate=new Date();
-                        Toast.makeText(MainActivity.mAct, "增加10点经验", Toast.LENGTH_SHORT).show();
-                        user.updateCurrentExpr(user.getCurrentExpr() + childWishes.get(groupPosition).get(childPosition).expr);
-
-                        //update level
-                        if(user.getCurrentExpr()>=user.getMaxExpr())
-                        {
-                            int level=user.getLevel();
-                            level++;
-                            user.updateLevel(level);
-                            user.updateMaxExpr((level + 1) * (level + 1) * 10);
-                            AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-                            dialog.setTitle("Level up!");
-                            dialog.setMessage("当前等级： " + level);
-                            dialog.setCancelable(false);
-                            dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            });
-                            dialog.show();
-                            //get a new achievement every 2 levels
-                            if(level%2==0) {
-                                user.updateHonors("plus1");
-                                AlertDialog.Builder achievedialog = new AlertDialog.Builder(context);
-                                achievedialog.setTitle("An Achievement!");
-                                achievedialog.setMessage("您获得了一个新成就，请前往成就页面查看");
-                                achievedialog.setCancelable(false);
-                                achievedialog.setPositiveButton("OK",new DialogInterface.OnClickListener(){
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which){}
-                                });
-                                dialog.show();
-                            }
-                        }
                     }
                 }
                 notifyDataSetChanged();
