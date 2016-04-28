@@ -377,6 +377,33 @@ public class WishDBManager {
         return result;
     }
 
+    public void getFinishedDate(List<CircleCanvas.CircleInfo> circleInfos,float deltax,float deltay,float r)
+    {
+        Cursor c=db.rawQuery("select * from child_wish where is_finished = ? order by finish_date asc",new String[]{"1"});
+        String finishtime;
+        int i=0;
+        if(c.moveToFirst())
+        {
+            finishtime=c.getString(c.getColumnIndex("finish_date"));
+            String a=Integer.toString(finishtime.length());
+            circleInfos.add(new CircleCanvas.CircleInfo(Float.parseFloat(finishtime.substring(5, 7))*deltax, Float.parseFloat(finishtime.substring(8, 10))*deltay, r));
+        }
+        while(c.moveToNext())
+        {
+            finishtime=c.getString(c.getColumnIndex("finish_date"));
+            if(Float.parseFloat(finishtime.substring(5, 7))*deltax==circleInfos.get(i).getX()&&Float.parseFloat(finishtime.substring(8,10))*deltay==circleInfos.get(i).getY())
+            {
+                //That day finish more than 1 wish
+                circleInfos.get(i).addRadius(r);
+            }
+            else
+            {
+                circleInfos.add(new CircleCanvas.CircleInfo(Float.parseFloat(finishtime.substring(5, 7))*deltax,Float.parseFloat(finishtime.substring(8, 10))*deltay,r));
+                i++;
+            }
+        }
+    }
+
     public void closeDB() {
         db.close();
     }

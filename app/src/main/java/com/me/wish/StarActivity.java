@@ -1,17 +1,18 @@
 package com.me.wish;
 
 import android.app.ActionBar;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 public class StarActivity extends AppCompatActivity {
     private CircleCanvas mCircleCanvas;
     private float deltaWidth;
     private float deltaHeight;
     private float radius;
+    private WishDBManager wishManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,23 +21,27 @@ public class StarActivity extends AppCompatActivity {
         viewGroup.addView(mCircleCanvas,new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(viewGroup);
 
-//get the data of the finished wishes
-
         //get the width and height of the screen
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        float xdpi=getResources().getDisplayMetrics().xdpi;
-        float ydpi=getResources().getDisplayMetrics().ydpi;
+        WindowManager windowManager = getWindowManager();
+        Point widthHeight = new Point();
+        windowManager.getDefaultDisplay().getSize(widthHeight);
 
-        deltaWidth = xdpi/13;
-        deltaHeight= ydpi/32;
-        Log.d("Width",Float.toString(deltaWidth));
-        Log.d("Height",Float.toString(deltaHeight));
+        //count information of the stars
+        deltaWidth = widthHeight.x/13;
+        deltaHeight= widthHeight.y/40;
         radius=Math.min(deltaWidth,deltaHeight)/4;
-        mCircleCanvas.mCircleInfos.add(new CircleCanvas.CircleInfo(4*deltaWidth, 28*deltaHeight, radius));
-        mCircleCanvas.mCircleInfos.add(new CircleCanvas.CircleInfo(4*deltaWidth, 29*deltaHeight, radius));
-        mCircleCanvas.mCircleInfos.add(new CircleCanvas.CircleInfo(100, 200, 10));
+
+
+        //draw the stars
+        wishManager=new WishDBManager(this);
+        wishManager.getFinishedDate(mCircleCanvas.mCircleInfos,deltaWidth,deltaHeight,radius);
         mCircleCanvas.invalidate();
+    }
+
+    protected  void onDestroy()
+    {
+        super.onDestroy();
+        wishManager.closeDB();
     }
 }
 

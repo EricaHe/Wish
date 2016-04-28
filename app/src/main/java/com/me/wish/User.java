@@ -23,6 +23,7 @@ public class User {
         dbhelper = new DBHelper(context);
         db = dbhelper.getWritableDatabase();
         cursor = db.query("user", null, null, null, null, null, null);
+        if(cursor.moveToFirst()) readDB();
     }
 
     //judge if a user has been created
@@ -40,12 +41,13 @@ public class User {
         values.put("level",0);
         values.put("current_expr",0);
         values.put("max_expr",10);
-        values.put("honors", "太空菜鸟");
+        values.put("honors", "太空菜鸟,太空实习生");
         db.insert("user", null, values);
         cursor = db.query("user", null, null, null, null, null, null);
+        readDB();
     }
 
-    public void readDB()
+    private void readDB()
     {
         if(cursor.moveToFirst()) {
             name = cursor.getString(cursor.getColumnIndex("name"));

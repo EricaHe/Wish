@@ -1,7 +1,6 @@
 package com.me.wish;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,23 +10,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -94,8 +86,6 @@ public class MainActivity extends AppCompatActivity
         TextView exp=(TextView) headerView.findViewById(R.id.textExp);
         user=new User(this);
         if(!user.exist()) user.addUser();
-        user.readDB();
-        Log.d("12345","huhuhu");
         String s=user.getUserName();
         user_name.setText(user.getUserName());
         user_level.setText("Level:" + Integer.toString(user.getLevel()));

@@ -1,9 +1,7 @@
 package com.me.wish;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.support.annotation.ColorInt;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +16,6 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -218,6 +214,7 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
                     wishDBM.updateIsFinishedById("child_wish", childWishes.get(groupPosition).get(childPosition).id, 0);
                     wishDBM.updateFinishDateById("child_wish", childWishes.get(groupPosition).get(childPosition).id, null);
                 } else {
+                    Log.d("getfinish", "222");
                     if (childWishes.get(groupPosition).get(childPosition).isDaily) {
                         Toast.makeText(MainActivity.mAct, "增加10点经验", Toast.LENGTH_SHORT).show();
                         // TODO:为用户增加10点经验

@@ -23,6 +23,8 @@ public class CircleCanvas extends View {
         private float x;
         private float y;
         private float radius;
+        private float deltax;
+        private float deltay;
 
         public CircleInfo(float x,float y,float radius)
         {
@@ -56,9 +58,9 @@ public class CircleCanvas extends View {
             return radius;
         }
 
-        public void setRadius(float radius)
+        public void addRadius(float r)
         {
-            this.radius=radius;
+            this.radius+=r;
         }
     }
 
