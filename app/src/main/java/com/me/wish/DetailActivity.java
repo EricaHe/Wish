@@ -10,14 +10,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity
@@ -25,10 +31,15 @@ public class DetailActivity extends AppCompatActivity
     private int wishID;
     private Wish wish = new Wish();
     private WishDBManager wishMgr;
+    private List<SparseBooleanArray> isSelected;
 
     private TextView titleTxtView;
     private TextView descriptionTxtView;
     private TextView dueDateTxtView;
+    private ListView childWishListView;
+
+    private List<Wish> childWishList;
+    private List<String> childWishListTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,27 +49,46 @@ public class DetailActivity extends AppCompatActivity
         wishMgr = new WishDBManager(DetailActivity.this);
 
         Intent intent = getIntent();
-        wishID=intent.getIntExtra("wish_id",-1);
+        wishID = intent.getIntExtra("wish_id", -1);
 
-        titleTxtView = (TextView)findViewById(R.id.detailWishTitleTxtView);
-        descriptionTxtView = (TextView)findViewById(R.id.detailWishDescriptionTxtView);
-        dueDateTxtView = (TextView)findViewById(R.id.detailWishDueDate);
+        titleTxtView = (TextView) findViewById(R.id.detailWishTitleTxtView);
+        descriptionTxtView = (TextView) findViewById(R.id.detailWishDescriptionTxtView);
+        dueDateTxtView = (TextView) findViewById(R.id.detailWishDueDate);
 
-        if(wishID == -1){
-            Toast.makeText(DetailActivity.this,"未正确指定查看的心愿",Toast.LENGTH_SHORT).show();
+        // 如果心愿id不对，直接退出
+        if (wishID == -1) {
+            Toast.makeText(DetailActivity.this, "未正确指定查看的心愿", Toast.LENGTH_SHORT).show();
             finish();
         } else {
+            // id正确后，设置各项显示内容
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
                 wish = wishMgr.queryParentWishById(wishID);
                 titleTxtView.setText(wish.title);
                 descriptionTxtView.setText(wish.description);
                 descriptionTxtView.setTextColor(0xffaaaaaa);
-                if (wish.dueDate == null){
+                if (wish.dueDate == null) {
                     dueDateTxtView.setText("");
                 } else {
                     dueDateTxtView.setText(sdf.format(wish.dueDate));
                 }
+
+                childWishListView = (ListView) findViewById(R.id.detailWishChildWishList);
+                if (wish.children_ids == null){
+                    childWishListTitle = new ArrayList<>();
+                    childWishListTitle.add("无子任务");
+                }
+                else {
+                    childWishList = wishMgr.queryChildWishesByParentId(wishID);
+                    childWishListTitle = new ArrayList<>();
+                    for(Wish w : childWishList){
+                        childWishListTitle.add(w.title);
+                    }
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+                        childWishListTitle);
+                if(childWishListView != null)
+                    childWishListView.setAdapter(adapter);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -66,17 +96,6 @@ public class DetailActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
-        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -90,7 +109,6 @@ public class DetailActivity extends AppCompatActivity
 
     protected void onStop() {
         super.onStop();
-        //应用的最后一个Activity关闭时应释放DB
         wishMgr.closeDB();
     }
 

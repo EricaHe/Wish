@@ -265,7 +265,11 @@ public class WishDBManager {
             } else {
                 for (String sChildId : sChildIds.split(",")) {
                     wish.children_ids = new ArrayList<>();
-                    Integer childId = Integer.parseInt(sChildId);
+                    Integer childId;
+                    if (sChildId.equals(""))
+                        childId = null;
+                    else
+                        childId = Integer.parseInt(sChildId);
                     wish.children_ids.add(childId);
                 }
             }
@@ -360,7 +364,7 @@ public class WishDBManager {
             wish.expr = c.getInt(c.getColumnIndex("expr"));
             wish.parent_id = c.getInt(c.getColumnIndex("parent_id"));
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
             wish.createDate = (c.getString(c.getColumnIndex("create_date")).equals("")) ?
                     null : sdf.parse(c.getString(c.getColumnIndex("create_date")));
             wish.dueDate = (c.getString(c.getColumnIndex("due_date")).equals("")) ?

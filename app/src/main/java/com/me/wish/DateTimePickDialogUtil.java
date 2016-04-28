@@ -87,7 +87,7 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener 
 
         calendar.set(datePicker.getYear(), datePicker.getMonth(),
                 datePicker.getDayOfMonth());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日",Locale.CHINA);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
 
         dateTime = sdf.format(calendar.getTime());
         ad.setTitle(dateTime);

@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -121,7 +122,14 @@ public class MainActivity extends AppCompatActivity
                 @SuppressLint("NewApi")
                 @Override
                 public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                    return groupPosition >= childWishes.size() || childWishes.get(groupPosition).isEmpty();
+                    boolean cannotExpand = groupPosition >= childWishes.size() || childWishes.get(groupPosition).isEmpty();
+                    if (cannotExpand){
+                        Intent goToDetailIntent = new Intent();
+                        goToDetailIntent.putExtra("wish_id", wishes.get(groupPosition).id);
+                        goToDetailIntent.setClass(MainActivity.this, DetailActivity.class);
+                        startActivity(goToDetailIntent);
+                    }
+                    return cannotExpand;
                 }
             });
         }
