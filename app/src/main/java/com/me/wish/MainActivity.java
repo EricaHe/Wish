@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         mAct = this;
+        wishMgr = new WishDBManager(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {
@@ -104,7 +105,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        wishMgr = new WishDBManager(this);
         try {
             dataInitialization(wishMgr);
         } catch (ParseException e) {
@@ -131,8 +131,10 @@ public class MainActivity extends AppCompatActivity
             expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                    Toast.makeText(MainActivity.this, "group=" + groupPosition + "---child=" + childPosition + "---" +
-                            childWishes.get(groupPosition).get(childPosition), Toast.LENGTH_SHORT).show();
+                    Intent goToDetailIntent = new Intent();
+                    goToDetailIntent.putExtra("wish_id", wishes.get(groupPosition).id);
+                    goToDetailIntent.setClass(MainActivity.this, DetailActivity.class);
+                    startActivity(goToDetailIntent);
                     return false;
                 }
             });

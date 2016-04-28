@@ -16,7 +16,7 @@ import java.util.Locale;
 /**
  * Created by Erica on 2016/4/25.
  */
-public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener, TimePicker.OnTimeChangedListener {
+public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener {
     private DatePicker datePicker;
     private TimePicker timePicker;
     private AlertDialog ad;
@@ -35,23 +35,19 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener,
         this.initDateTime = sdf.format(new Date());
     }
 
-    public void init(DatePicker datePicker, TimePicker timePicker) {
+    public void init(DatePicker datePicker) {
         Calendar calendar = Calendar.getInstance();
         if (!(null == initDateTime || "".equals(initDateTime))) {
             calendar = this.getCalendarByInintData(initDateTime);
         } else {
             initDateTime = calendar.get(Calendar.YEAR) + "年"
                     + calendar.get(Calendar.MONTH) + "月"
-                    + calendar.get(Calendar.DAY_OF_MONTH) + "日 "
-                    + calendar.get(Calendar.HOUR_OF_DAY) + ":"
-                    + calendar.get(Calendar.MINUTE);
+                    + calendar.get(Calendar.DAY_OF_MONTH) + "日 ";
         }
 
         datePicker.init(calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH), this);
-        timePicker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
-        timePicker.setCurrentMinute(calendar.get(Calendar.MINUTE));
     }
 
     /**
@@ -64,10 +60,7 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener,
         LinearLayout dateTimeLayout = (LinearLayout) activity
                 .getLayoutInflater().inflate(R.layout.common_datetime, null);
         datePicker = (DatePicker) dateTimeLayout.findViewById(R.id.dueDatePicker);
-        timePicker = (TimePicker) dateTimeLayout.findViewById(R.id.dueTimePicker);
-        init(datePicker, timePicker);
-        timePicker.setIs24HourView(true);
-        timePicker.setOnTimeChangedListener(this);
+        init(datePicker);
 
         ad = new AlertDialog.Builder(activity)
                 .setTitle(initDateTime)
@@ -87,19 +80,14 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener,
         return ad;
     }
 
-    public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-        onDateChanged(null, 0, 0, 0);
-    }
-
     public void onDateChanged(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
         // 获得日历实例
         Calendar calendar = Calendar.getInstance();
 
         calendar.set(datePicker.getYear(), datePicker.getMonth(),
-                datePicker.getDayOfMonth(), timePicker.getCurrentHour(),
-                timePicker.getCurrentMinute());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+                datePicker.getDayOfMonth());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日",Locale.CHINA);
 
         dateTime = sdf.format(calendar.getTime());
         ad.setTitle(dateTime);
@@ -124,17 +112,12 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener,
         String monthStr = spliteString(monthAndDay, "月", "index", "front"); // 月
         String dayStr = spliteString(monthAndDay, "月", "index", "back"); // 日
 
-        String hourStr = spliteString(time, ":", "index", "front"); // 时
-        String minuteStr = spliteString(time, ":", "index", "back"); // 分
 
         int currentYear = Integer.valueOf(yearStr.trim()).intValue();
         int currentMonth = Integer.valueOf(monthStr.trim()).intValue() - 1;
         int currentDay = Integer.valueOf(dayStr.trim()).intValue();
-        int currentHour = Integer.valueOf(hourStr.trim()).intValue();
-        int currentMinute = Integer.valueOf(minuteStr.trim()).intValue();
 
-        calendar.set(currentYear, currentMonth, currentDay, currentHour,
-                currentMinute);
+        calendar.set(currentYear, currentMonth, currentDay);
         return calendar;
     }
 

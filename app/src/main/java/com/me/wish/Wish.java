@@ -26,8 +26,8 @@ public class Wish {
     public boolean isFinished;
     public boolean isDaily;
 
-    public Wish(String title) {
-        this.title = title;
+    public Wish() {
+        this.title = "";
         this.description = "";
         this.comment = "";
         this.photo_path = null;
@@ -45,8 +45,8 @@ public class Wish {
         this.isDaily = false;
     }
 
-    public Wish() {
-        this.title = "";
+    public Wish(String title) {
+        this.title = title;
         this.description = "";
         this.comment = "";
         this.photo_path = null;
