@@ -143,7 +143,8 @@ public class DetailActivity extends AppCompatActivity
                         DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(DetailActivity.this);
                         dateTimePicKDialog.dateTimePicKDialog(dueDateTxtView);
                         try {
-                            wish.dueDate = sdf.parse(dueDateTxtView.getText().toString());
+                            wish.dueDate = (dueDateTxtView.getText().toString().equals("")) ?
+                                    null : sdf.parse(dueDateTxtView.getText().toString());
                             wishMgr.updateDueDate("parent_wish", wish);
                         } catch (ParseException e) {
                             e.printStackTrace();

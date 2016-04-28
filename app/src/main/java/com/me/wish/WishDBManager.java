@@ -198,7 +198,7 @@ public class WishDBManager {
     public void updateDueDate(String table, Wish wish) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
         ContentValues cv = new ContentValues();
-        cv.put("due_date", sdf.format(wish.dueDate));
+        cv.put("due_date", (wish.dueDate == null) ? "" : sdf.format(wish.dueDate));
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
     }
 

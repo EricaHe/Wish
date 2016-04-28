@@ -70,7 +70,7 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener 
                         inputDate.setText(dateTime);
                     }
                 })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                .setNegativeButton("清空", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         inputDate.setText("");
                     }
@@ -94,7 +94,7 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener 
                         inputDate.setText(dateTime);
                     }
                 })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                .setNegativeButton("清空", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         inputDate.setText("");
                     }
