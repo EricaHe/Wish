@@ -162,13 +162,19 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
         } else
             groupHolder = (GroupHolder) convertView.getTag();
 
-        if (!isExpanded)
+        if (wishes.get(groupPosition).children_ids == null)
+            groupHolder.img.setVisibility(ImageView.INVISIBLE);
+        else if (!isExpanded) {
+            groupHolder.img.setVisibility(ImageView.VISIBLE);
             groupHolder.img.setBackgroundResource(android.R.drawable.arrow_down_float);
-        else
+        }else{
+            groupHolder.img.setVisibility(ImageView.VISIBLE);
             groupHolder.img.setBackgroundResource(android.R.drawable.arrow_up_float);
+        }
 
         groupHolder.txt.setText(wishes.get(groupPosition).title);
-        groupHolder.date.setText(sdf.format(wishes.get(groupPosition).dueDate));
+        groupHolder.date.setText((wishes.get(groupPosition).dueDate == null) ?
+                "" : sdf.format(wishes.get(groupPosition).dueDate));
         return convertView;
     }
 

@@ -134,7 +134,7 @@ public class AddActivity extends AppCompatActivity {
                         for (Wish child : childrenWish) {
                             sChildrenWishIds = sChildrenWishIds + "," + Integer.toString(child.id);
                         }
-                        sChildrenWishIds = sChildrenWishIds.substring(1);
+                        sChildrenWishIds = (sChildrenWishIds.equals(""))?"":sChildrenWishIds.substring(1);
                         wishMgr.updateChildIdByParentId(sChildrenWishIds, parentId);
 
                         wishMgr.closeDB();

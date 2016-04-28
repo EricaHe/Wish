@@ -13,15 +13,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 public class DetailActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private int wishID;
+    private Wish wish;
+    private WishDBManager wishMgr = new WishDBManager(this);
+
+    private TextView titleTxtView = (TextView)findViewById(R.id.detailWishTitleTxtView);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        //titleTxtView.setText();
 
         Intent intent = getIntent();
         wishID=intent.getIntExtra("wish_id",-1);//TODO:need to change with mainactivity
