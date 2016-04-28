@@ -105,7 +105,7 @@ public class AddActivity extends AppCompatActivity {
             addWishBtn.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     try {
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
                         String title = titleEditTxt.getText().toString();
                         String description = descriptionEditTxt.getText().toString();
                         String comment = commentEditTxt.getText().toString();

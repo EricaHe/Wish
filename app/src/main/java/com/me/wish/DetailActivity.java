@@ -14,24 +14,55 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private int wishID;
-    private Wish wish;
-    private WishDBManager wishMgr = new WishDBManager(this);
+    private Wish wish = new Wish();
+    private WishDBManager wishMgr;
 
-    private TextView titleTxtView = (TextView)findViewById(R.id.detailWishTitleTxtView);
+    private TextView titleTxtView;
+    private TextView descriptionTxtView;
+    private TextView dueDateTxtView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        //titleTxtView.setText();
+        wishMgr = new WishDBManager(DetailActivity.this);
 
         Intent intent = getIntent();
-        wishID=intent.getIntExtra("wish_id",-1);//TODO:need to change with mainactivity
+        wishID=intent.getIntExtra("wish_id",-1);
+
+        titleTxtView = (TextView)findViewById(R.id.detailWishTitleTxtView);
+        descriptionTxtView = (TextView)findViewById(R.id.detailWishDescriptionTxtView);
+        dueDateTxtView = (TextView)findViewById(R.id.detailWishDueDate);
+
+        if(wishID == -1){
+            Toast.makeText(DetailActivity.this,"未正确指定查看的心愿",Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
+                wish = wishMgr.queryParentWishById(wishID);
+                titleTxtView.setText(wish.title);
+                descriptionTxtView.setText(wish.description);
+                descriptionTxtView.setTextColor(0xffaaaaaa);
+                if (wish.dueDate == null){
+                    dueDateTxtView.setText("");
+                } else {
+                    dueDateTxtView.setText(sdf.format(wish.dueDate));
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -55,6 +86,12 @@ public class DetailActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    protected void onStop() {
+        super.onStop();
+        //应用的最后一个Activity关闭时应释放DB
+        wishMgr.closeDB();
     }
 
     @Override

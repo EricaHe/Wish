@@ -1,6 +1,7 @@
 package com.me.wish;
 
 import android.content.Context;
+
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -158,13 +159,14 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
         } else
             groupHolder = (GroupHolder) convertView.getTag();
 
-        if (wishes.get(groupPosition).children_ids == null)
-            groupHolder.img.setVisibility(ImageView.INVISIBLE);
+        if (wishes.get(groupPosition).children_ids == null){
+            groupHolder.img.setVisibility(View.INVISIBLE);
+        }
         else if (!isExpanded) {
-            groupHolder.img.setVisibility(ImageView.VISIBLE);
+            groupHolder.img.setVisibility(View.VISIBLE);
             groupHolder.img.setBackgroundResource(android.R.drawable.arrow_down_float);
         }else{
-            groupHolder.img.setVisibility(ImageView.VISIBLE);
+            groupHolder.img.setVisibility(View.VISIBLE);
             groupHolder.img.setBackgroundResource(android.R.drawable.arrow_up_float);
         }
 

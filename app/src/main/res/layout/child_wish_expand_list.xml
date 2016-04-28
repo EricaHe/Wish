@@ -2,12 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:descendantFocusability="blocksDescendants">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:paddingLeft="20dp">
+        android:paddingStart="20dp">
 
         <CheckBox
             android:id="@+id/finishWishChkBox"
@@ -18,7 +19,6 @@
             android:id="@+id/child_wish_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="xxxxxxxxxxxx"
             android:textColor="#ff616161" />
     </LinearLayout>
 
