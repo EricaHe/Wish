@@ -97,9 +97,9 @@ public class MainActivity extends AppCompatActivity
         user.readDB();
         Log.d("12345","huhuhu");
         String s=user.getUserName();
-        user_name.setText(" "+user.getUserName());
-        user_level.setText("  Level:" + Integer.toString(user.getLevel()));
-        exp.setText("  经验值：" + Integer.toString(user.getCurrentExpr()) + "/" + Integer.toString(user.getMaxExpr()));
+        user_name.setText(user.getUserName());
+        user_level.setText("Level:" + Integer.toString(user.getLevel()));
+        exp.setText("经验值：" + Integer.toString(user.getCurrentExpr()) + "/" + Integer.toString(user.getMaxExpr()));
 
         //update the name
         user_name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -209,7 +209,8 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra("achieve",user.getHonors());
             startActivity(intent);
         } else if (id == R.id.nav_star) {
-
+            Intent intent=new Intent(MainActivity.this,StarActivity.class);
+            startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer != null) {

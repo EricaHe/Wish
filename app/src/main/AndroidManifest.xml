@@ -23,7 +23,8 @@
             android:label="Wish+"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AddActivity" />
-        <activity android:name=".AchieveActivity"></activity>
+        <activity android:name=".AchieveActivity" />
+        <activity android:name=".StarActivity"></activity>
     </application>
 
 </manifest>

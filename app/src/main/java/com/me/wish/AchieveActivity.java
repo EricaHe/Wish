@@ -38,6 +38,12 @@ public class AchieveActivity extends AppCompatActivity {
         AchieveAdapter adapter = new AchieveAdapter(this,R.layout.achieve_item,achieveList);
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent,View view, int position, long id) {
+                Achieve achieve = achieveList.get(position);
+                Toast.makeText(AchieveActivity.this,achieve.getCondition(),Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
