@@ -35,7 +35,6 @@ public class WishDBManager {
             for (Wish wish : childWishes) {
                 /* get format of date */
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
-                Log.e("param", "wish:" + Integer.toString(wish.parent_id));
                 Object[] item = new Object[]{wish.title, wish.description, wish.parent_id, wish.expr,
                         (wish.dueDate == null) ? "" : sdf.format(wish.dueDate),
                         (wish.createDate == null) ? "" : sdf.format(wish.createDate),
@@ -130,6 +129,12 @@ public class WishDBManager {
         ContentValues cv = new ContentValues();
         cv.put("description", wish.description);
         db.update(table, cv, "id = ?", new String[]{Integer.toString(wish.id)});
+    }
+
+    public void updateDescription(String table, String desc, int id) {
+        ContentValues cv = new ContentValues();
+        cv.put("description", desc);
+        db.update(table, cv, "id = ?", new String[]{Integer.toString(id)});
     }
 
     public void updateParentId(Wish wish) {

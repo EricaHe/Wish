@@ -10,11 +10,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -31,6 +35,7 @@ public class DetailActivity extends AppCompatActivity
     private int wishID;
     private Wish wish = new Wish();
     private WishDBManager wishMgr;
+    private User user;
     private List<SparseBooleanArray> isSelected;
 
     private TextView titleTxtView;
@@ -62,16 +67,102 @@ public class DetailActivity extends AppCompatActivity
         } else {
             // id正确后，设置各项显示内容
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
+                final SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
                 wish = wishMgr.queryParentWishById(wishID);
                 titleTxtView.setText(wish.title);
+                titleTxtView.setOnClickListener(new View.OnClickListener(){
+                    public void onClick(View v){
+                        SetTextDialogUtil setTextDialog = new SetTextDialogUtil(DetailActivity.this);
+                        setTextDialog.setTextDialog(titleTxtView);
+                    }
+                });
+                titleTxtView.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        wish.title = titleTxtView.getText().toString();
+                        wishMgr.updateTitle("parent_wish",wish);
+                    }
+                });
+
                 descriptionTxtView.setText(wish.description);
                 descriptionTxtView.setTextColor(0xffaaaaaa);
+                descriptionTxtView.setOnClickListener(new View.OnClickListener(){
+                    public void onClick(View v){
+                        SetTextDialogUtil setTextDialog = new SetTextDialogUtil(DetailActivity.this);
+                        setTextDialog.setTextDialog(descriptionTxtView);
+                        wish.description = descriptionTxtView.getText().toString();
+                        wishMgr.updateDescription("parent_wish",wish.description,wishID);
+                    }
+                });
+                descriptionTxtView.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        wish.description = descriptionTxtView.getText().toString();
+                        wishMgr.updateDescription("parent_wish",wish);
+                    }
+                });
+
                 if (wish.dueDate == null) {
                     dueDateTxtView.setText("");
                 } else {
                     dueDateTxtView.setText(sdf.format(wish.dueDate));
                 }
+                // date输入框
+                dueDateTxtView = (TextView) findViewById(R.id.detailWishDueDate);
+                dueDateTxtView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (hasFocus) {
+                            DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(DetailActivity.this);
+                            dateTimePicKDialog.dateTimePicKDialog(dueDateTxtView);
+                            try {
+                                wish.dueDate = sdf.parse(dueDateTxtView.getText().toString());
+                                wishMgr.updateDueDate("parent_wish",wish);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+                dueDateTxtView.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(DetailActivity.this);
+                        dateTimePicKDialog.dateTimePicKDialog(dueDateTxtView);
+                        try {
+                            wish.dueDate = sdf.parse(dueDateTxtView.getText().toString());
+                            wishMgr.updateDueDate("parent_wish",wish);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                dueDateTxtView.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        String modifiedDate = dueDateTxtView.getText().toString();
+                        if (modifiedDate.equals("")){
+                            wish.dueDate = null;
+                        } else {
+                            try {
+                                wish.dueDate = sdf.parse(modifiedDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        wishMgr.updateDueDate("parent_wish",wish);
+                    }
+                });
 
                 childWishListView = (ListView) findViewById(R.id.detailWishChildWishList);
                 if (wish.children_ids == null){
@@ -87,8 +178,9 @@ public class DetailActivity extends AppCompatActivity
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
                         childWishListTitle);
-                if(childWishListView != null)
+                if(childWishListView != null){
                     childWishListView.setAdapter(adapter);
+                }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -104,7 +196,30 @@ public class DetailActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(this);
+        }
+
+        //show personal center
+        View headerView=navigationView.getHeaderView(0);
+        final EditText user_name=(EditText) headerView.findViewById(R.id.textName);
+        TextView user_level=(TextView) headerView.findViewById(R.id.textLevel);
+        TextView exp=(TextView) headerView.findViewById(R.id.textExp);
+        user=new User(DetailActivity.this);
+        if(!user.exist()) user.addUser();
+        user_name.setText(user.getUserName());
+        user_level.setText("Level:" + Integer.toString(user.getLevel()));
+        exp.setText("经验值：" + Integer.toString(user.getCurrentExpr()) + "/" + Integer.toString(user.getMaxExpr()));
+
+        //update the name
+        user_name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) user.updateUserName(user_name.getText().toString());
+            }
+        });
+
     }
 
     protected void onStop() {
@@ -150,22 +265,18 @@ public class DetailActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_achieve) {
+            Intent intent = new Intent(DetailActivity.this,AchieveActivity.class);
+            intent.putExtra("achieve",user.getHonors());
+            startActivity(intent);
+        } else if (id == R.id.nav_star) {
+            Intent intent=new Intent(DetailActivity.this,StarActivity.class);
+            startActivity(intent);
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if (drawer != null) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
         return true;
     }
 }

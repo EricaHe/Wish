@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
@@ -18,7 +19,6 @@ import java.util.Locale;
  */
 public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener {
     private DatePicker datePicker;
-    private TimePicker timePicker;
     private AlertDialog ad;
     private String dateTime;
     private String initDateTime;
@@ -30,7 +30,7 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener 
      * @param activity ：调用的父activity
      */
     public DateTimePickDialogUtil(Activity activity) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
         this.activity = activity;
         this.initDateTime = sdf.format(new Date());
     }
@@ -57,6 +57,30 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener 
      * @return ad
      */
     public AlertDialog dateTimePicKDialog(final EditText inputDate) {
+        LinearLayout dateTimeLayout = (LinearLayout) activity
+                .getLayoutInflater().inflate(R.layout.common_datetime, null);
+        datePicker = (DatePicker) dateTimeLayout.findViewById(R.id.dueDatePicker);
+        init(datePicker);
+
+        ad = new AlertDialog.Builder(activity)
+                .setTitle(initDateTime)
+                .setView(dateTimeLayout)
+                .setPositiveButton("设置", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        inputDate.setText(dateTime);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        inputDate.setText("");
+                    }
+                }).show();
+
+        onDateChanged(null, 0, 0, 0);
+        return ad;
+    }
+
+    public AlertDialog dateTimePicKDialog(final TextView inputDate) {
         LinearLayout dateTimeLayout = (LinearLayout) activity
                 .getLayoutInflater().inflate(R.layout.common_datetime, null);
         datePicker = (DatePicker) dateTimeLayout.findViewById(R.id.dueDatePicker);

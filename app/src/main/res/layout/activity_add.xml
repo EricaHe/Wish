@@ -87,6 +87,13 @@
             android:layout_weight="10"
             android:orientation="horizontal">
 
+            <EditText
+                android:id="@+id/childWishEditText"
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="wrap_content"
+                android:hint="@string/childWishAddHint" />
+
             <ImageButton
                 android:id="@+id/addChildWishImgBtn"
                 android:layout_width="wrap_content"
@@ -94,12 +101,6 @@
                 android:layout_gravity="center_vertical|end"
                 android:background="@android:drawable/ic_input_add"
                 android:contentDescription="@string/addWishTitle" />
-
-            <EditText
-                android:id="@+id/childWishEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/childWishAddHint" />
         </LinearLayout>
     </TableRow>
 
