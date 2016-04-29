@@ -69,6 +69,10 @@
             android:layout_height="180dp"
             android:layout_weight="15"
             android:layout_gravity="end" />
+
+        <TextView
+            android:id="@+id/detailWishInvisibleText"
+            android:visibility="invisible"/>
     </TableRow>
 
     <TableRow>

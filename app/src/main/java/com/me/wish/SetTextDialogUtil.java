@@ -14,9 +14,8 @@ public class SetTextDialogUtil {
     private EditText txtSetter;
     private AlertDialog ad;
     private Activity activity;
-    private String dialogTitle;
-    private WishDBManager wishMgr;
     private Wish modifiedWish;
+    //public String newStr;
 
     public SetTextDialogUtil(Activity activity){
         this.activity = activity;
@@ -24,7 +23,6 @@ public class SetTextDialogUtil {
 
     public void init(EditText txtSet){
         txtSet.setText("");
-        wishMgr = new WishDBManager(activity);
     }
 
     public AlertDialog setTextDialog(final TextView inputTxt){
@@ -39,15 +37,6 @@ public class SetTextDialogUtil {
                 .setPositiveButton("设置", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         inputTxt.setText(txtSetter.getText().toString());
-//                        if (dialogTitle.equals("标题")){
-//                            modifiedWish.title = txtSetter.getText().toString();
-//                            wishMgr.updateTitle("parent_wish",modifiedWish);
-//                        } else if (dialogTitle.equals("描述")){
-//                            modifiedWish.description = txtSetter.getText().toString();
-//                            wishMgr.updateDescription("parent_wish", modifiedWish);
-//                        } else if (dialogTitle.equals("截止日期")){
-//
-//                        }
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {

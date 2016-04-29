@@ -2,6 +2,7 @@ package com.me.wish;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,7 @@ import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -24,10 +26,15 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity
@@ -42,6 +49,8 @@ public class DetailActivity extends AppCompatActivity
     private TextView descriptionTxtView;
     private TextView dueDateTxtView;
     private ListView childWishListView;
+    private TextView commentTxtView;
+    private TextView invisibleTxtView;
 
     private List<Wish> childWishList;
     private List<String> childWishListTitle;
@@ -59,6 +68,7 @@ public class DetailActivity extends AppCompatActivity
         titleTxtView = (TextView) findViewById(R.id.detailWishTitleTxtView);
         descriptionTxtView = (TextView) findViewById(R.id.detailWishDescriptionTxtView);
         dueDateTxtView = (TextView) findViewById(R.id.detailWishDueDate);
+        commentTxtView = (TextView) findViewById(R.id.detailWishCommentTxtView);
 
         // 如果心愿id不对，直接退出
         if (wishID == -1) {
@@ -94,8 +104,6 @@ public class DetailActivity extends AppCompatActivity
                     public void onClick(View v){
                         SetTextDialogUtil setTextDialog = new SetTextDialogUtil(DetailActivity.this);
                         setTextDialog.setTextDialog(descriptionTxtView);
-                        wish.description = descriptionTxtView.getText().toString();
-                        wishMgr.updateDescription("parent_wish",wish.description,wishID);
                     }
                 });
                 descriptionTxtView.addTextChangedListener(new TextWatcher() {
@@ -165,22 +173,70 @@ public class DetailActivity extends AppCompatActivity
                 });
 
                 childWishListView = (ListView) findViewById(R.id.detailWishChildWishList);
+                invisibleTxtView = (TextView) findViewById(R.id.detailWishInvisibleText);
                 if (wish.children_ids == null){
                     childWishListTitle = new ArrayList<>();
-                    childWishListTitle.add("无子任务");
+                    childWishListTitle.add("点击添加子心愿");
                 }
                 else {
                     childWishList = wishMgr.queryChildWishesByParentId(wishID);
                     childWishListTitle = new ArrayList<>();
+                    childWishListTitle.add("点击添加子心愿");
                     for(Wish w : childWishList){
                         childWishListTitle.add(w.title);
                     }
                 }
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
                         childWishListTitle);
                 if(childWishListView != null){
                     childWishListView.setAdapter(adapter);
                 }
+                childWishListView.setOnItemClickListener(new ListView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (position == childWishListView.getFirstVisiblePosition()){
+                            SetTextDialogUtil setTextDialog = new SetTextDialogUtil(DetailActivity.this);
+                            setTextDialog.setTextDialog(invisibleTxtView);
+                        }
+                    }
+                });
+                invisibleTxtView.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        String extraChildWishTitle = invisibleTxtView.getText().toString();
+                        Wish extraChildWish = new Wish(extraChildWishTitle);
+                        extraChildWish.parent_id = wishID;
+                        Integer childId = wishMgr.addOneChildWishReturnId(extraChildWish);
+                        wish.children_ids.add(childId);
+                        wishMgr.updateChildId(wish);
+                        childWishListTitle.add(extraChildWishTitle);
+                        childWishList.add(extraChildWish);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+                commentTxtView.setText(wish.comment);
+                commentTxtView.setOnClickListener(new View.OnClickListener(){
+                    public void onClick(View v){
+                        SetTextDialogUtil setTextDialog = new SetTextDialogUtil(DetailActivity.this);
+                        setTextDialog.setTextDialog(commentTxtView);
+                    }
+                });
+                commentTxtView.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        wish.comment = commentTxtView.getText().toString();
+                        wishMgr.updateComment(wish);
+                    }
+                });
             } catch (ParseException e) {
                 e.printStackTrace();
             }

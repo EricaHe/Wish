@@ -29,6 +29,29 @@ public class WishDBManager {
     }
 
     // add part
+    public Integer addOneChildWishReturnId(Wish childWish){
+        db.beginTransaction();
+        Integer childId = -1;
+        try {
+            /* get format of date */
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
+            Object[] item = new Object[]{childWish.title, childWish.description, childWish.parent_id, childWish.expr,
+                    (childWish.dueDate == null) ? "" : sdf.format(childWish.dueDate),
+                    (childWish.createDate == null) ? "" : sdf.format(childWish.createDate),
+                    (childWish.finishDate == null) ? "" : sdf.format(childWish.finishDate),
+                    (childWish.isFinished) ? 1 : 0, (childWish.isDaily) ? 1 : 0};
+            db.execSQL("INSERT INTO child_wish VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?, ?)", item);
+            Cursor cursor = db.rawQuery("select last_insert_rowid() from child_wish", null);
+            if (cursor.moveToFirst())
+                childId = cursor.getInt(0);
+            cursor.close();
+            db.setTransactionSuccessful();  //设置事务成功完成
+            return childId;
+        } finally {
+            db.endTransaction();    //结束事务
+        }
+    }
+
     public void addChildWishes(List<Wish> childWishes) {
         db.beginTransaction();  //开始事务
         try {
@@ -61,7 +84,7 @@ public class WishDBManager {
                         (wish.finishDate == null) ? "" : sdf.format(wish.finishDate),
                         (wish.isFinished) ? 1 : 0, (wish.isDaily) ? 1 : 0};
                 db.execSQL("INSERT INTO child_wish VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?, ?)", item);
-                Cursor cursor = db.rawQuery("select last_insert_rowid() from parent_wish", null);
+                Cursor cursor = db.rawQuery("select last_insert_rowid() from child_wish", null);
                 if (cursor.moveToFirst())
                     newChildrenIds.add(cursor.getInt(0));
                 cursor.close();
