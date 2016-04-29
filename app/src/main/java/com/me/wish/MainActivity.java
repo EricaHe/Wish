@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -30,6 +29,8 @@ public class MainActivity extends AppCompatActivity
     private List<List<Wish>> childWishes;
     private WishDBManager wishMgr;
     private User user;
+    TextView user_level;
+    TextView exp;
 
     public static MainActivity mAct;
 
@@ -84,11 +85,10 @@ public class MainActivity extends AppCompatActivity
         //show personal center
         View headerView=navigationView.getHeaderView(0);
         final EditText user_name=(EditText) headerView.findViewById(R.id.textName);
-        TextView user_level=(TextView) headerView.findViewById(R.id.textLevel);
-        TextView exp=(TextView) headerView.findViewById(R.id.textExp);
+        user_level=(TextView) headerView.findViewById(R.id.textLevel);
+        exp=(TextView) headerView.findViewById(R.id.textExp);
         user=new User(this);
         if(!user.exist()) user.addUser();
-        String s=user.getUserName();
         user_name.setText(user.getUserName());
         user_level.setText("Level:" + Integer.toString(user.getLevel()));
         exp.setText("经验值：" + Integer.toString(user.getCurrentExpr()) + "/" + Integer.toString(user.getMaxExpr()));
@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity
                 if (!hasFocus) user.updateUserName(user_name.getText().toString());
             }
         });
+
     }
 
     @Override
@@ -148,7 +149,7 @@ public class MainActivity extends AppCompatActivity
             });
         }
 
-        MyExpandableListViewAdapter adapter = new MyExpandableListViewAdapter(this, wishes, childWishes, wishMgr);
+        MyExpandableListViewAdapter adapter = new MyExpandableListViewAdapter(this, wishes, childWishes, wishMgr,user_level,exp);
         if (expandableListView != null) {
             expandableListView.setAdapter(adapter);
         }
@@ -204,6 +205,8 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_achieve) {
             Intent intent = new Intent(MainActivity.this,AchieveActivity.class);
+            user.readDB();//update the achievements
+            Log.d("enter",Integer.toString(user.getHonors().length));
             intent.putExtra("achieve",user.getHonors());
             startActivity(intent);
         } else if (id == R.id.nav_star) {

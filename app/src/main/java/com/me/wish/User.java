@@ -41,14 +41,15 @@ public class User {
         values.put("level",0);
         values.put("current_expr",0);
         values.put("max_expr",10);
-        values.put("honors", "太空菜鸟,太空实习生");
+        values.put("honors", "太空菜鸟");
         db.insert("user", null, values);
         cursor = db.query("user", null, null, null, null, null, null);
         readDB();
     }
 
-    private void readDB()
+    public void readDB()
     {
+        cursor = db.query("user", null, null, null, null, null, null);
         if(cursor.moveToFirst()) {
             name = cursor.getString(cursor.getColumnIndex("name"));
             level = cursor.getInt(cursor.getColumnIndex("level"));

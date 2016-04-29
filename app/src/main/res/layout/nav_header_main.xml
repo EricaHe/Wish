@@ -55,9 +55,10 @@
             android:id="@+id/textLevel"
             android:layout_above="@+id/textExp"
             android:layout_alignStart="@+id/textExp"
-            android:textSize="18dp"
+            android:textSize="15dp"
             android:text="level"
-            android:layout_marginLeft="20dp" />
+            android:layout_marginLeft="20dp"
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/textExp"
@@ -65,9 +66,11 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/imageView"
             android:layout_alignStart="@+id/textName"
-            android:textSize="18dp"
+            android:textSize="15dp"
             android:text="exp"
-            android:layout_marginLeft="20dp" />
+            android:layout_marginLeft="20dp"
+            android:singleLine="true"
+            android:nestedScrollingEnabled="false" />
     </LinearLayout>
 
 </RelativeLayout>
