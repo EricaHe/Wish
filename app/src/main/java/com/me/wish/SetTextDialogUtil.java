@@ -14,18 +14,16 @@ public class SetTextDialogUtil {
     private EditText txtSetter;
     private AlertDialog ad;
     private Activity activity;
-    private Wish modifiedWish;
-    //public String newStr;
 
-    public SetTextDialogUtil(Activity activity){
+    public SetTextDialogUtil(Activity activity) {
         this.activity = activity;
     }
 
-    public void init(EditText txtSet){
+    public void init(EditText txtSet) {
         txtSet.setText("");
     }
 
-    public AlertDialog setTextDialog(final TextView inputTxt){
+    public AlertDialog setTextDialog(final TextView inputTxt) {
         LinearLayout txtSetterLayout = (LinearLayout) activity
                 .getLayoutInflater().inflate(R.layout.common_txt_setter, null);
         txtSetter = (EditText) txtSetterLayout.findViewById(R.id.textSetter);
@@ -40,7 +38,8 @@ public class SetTextDialogUtil {
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {}
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
                 }).show();
         return ad;
     }

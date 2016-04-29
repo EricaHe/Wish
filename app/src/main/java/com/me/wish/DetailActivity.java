@@ -2,10 +2,7 @@ package com.me.wish;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,19 +18,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity
@@ -50,7 +40,8 @@ public class DetailActivity extends AppCompatActivity
     private TextView dueDateTxtView;
     private ListView childWishListView;
     private TextView commentTxtView;
-    private TextView invisibleTxtView;
+    private TextView invisibleAddingTxtView;
+    private TextView invisibleEditingTxtView;
 
     private List<Wish> childWishList;
     private List<String> childWishListTitle;
@@ -80,41 +71,49 @@ public class DetailActivity extends AppCompatActivity
                 final SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
                 wish = wishMgr.queryParentWishById(wishID);
                 titleTxtView.setText(wish.title);
-                titleTxtView.setOnClickListener(new View.OnClickListener(){
-                    public void onClick(View v){
+                titleTxtView.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
                         SetTextDialogUtil setTextDialog = new SetTextDialogUtil(DetailActivity.this);
                         setTextDialog.setTextDialog(titleTxtView);
                     }
                 });
                 titleTxtView.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
                     @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+
                     @Override
                     public void afterTextChanged(Editable s) {
                         wish.title = titleTxtView.getText().toString();
-                        wishMgr.updateTitle("parent_wish",wish);
+                        wishMgr.updateTitle("parent_wish", wish);
                     }
                 });
 
                 descriptionTxtView.setText(wish.description);
                 descriptionTxtView.setTextColor(0xffaaaaaa);
-                descriptionTxtView.setOnClickListener(new View.OnClickListener(){
-                    public void onClick(View v){
+                descriptionTxtView.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
                         SetTextDialogUtil setTextDialog = new SetTextDialogUtil(DetailActivity.this);
                         setTextDialog.setTextDialog(descriptionTxtView);
                     }
                 });
                 descriptionTxtView.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
                     @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+
                     @Override
                     public void afterTextChanged(Editable s) {
                         wish.description = descriptionTxtView.getText().toString();
-                        wishMgr.updateDescription("parent_wish",wish);
+                        wishMgr.updateDescription("parent_wish", wish);
                     }
                 });
 
@@ -132,7 +131,7 @@ public class DetailActivity extends AppCompatActivity
                             dateTimePicKDialog.dateTimePicKDialog(dueDateTxtView);
                             try {
                                 wish.dueDate = sdf.parse(dueDateTxtView.getText().toString());
-                                wishMgr.updateDueDate("parent_wish",wish);
+                                wishMgr.updateDueDate("parent_wish", wish);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -145,7 +144,7 @@ public class DetailActivity extends AppCompatActivity
                         dateTimePicKDialog.dateTimePicKDialog(dueDateTxtView);
                         try {
                             wish.dueDate = sdf.parse(dueDateTxtView.getText().toString());
-                            wishMgr.updateDueDate("parent_wish",wish);
+                            wishMgr.updateDueDate("parent_wish", wish);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -153,13 +152,17 @@ public class DetailActivity extends AppCompatActivity
                 });
                 dueDateTxtView.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
                     @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+
                     @Override
                     public void afterTextChanged(Editable s) {
                         String modifiedDate = dueDateTxtView.getText().toString();
-                        if (modifiedDate.equals("")){
+                        if (modifiedDate.equals("")) {
                             wish.dueDate = null;
                         } else {
                             try {
@@ -168,46 +171,51 @@ public class DetailActivity extends AppCompatActivity
                                 e.printStackTrace();
                             }
                         }
-                        wishMgr.updateDueDate("parent_wish",wish);
+                        wishMgr.updateDueDate("parent_wish", wish);
                     }
                 });
 
                 childWishListView = (ListView) findViewById(R.id.detailWishChildWishList);
-                invisibleTxtView = (TextView) findViewById(R.id.detailWishInvisibleText);
-                if (wish.children_ids == null){
+                invisibleAddingTxtView = (TextView) findViewById(R.id.detailWishInvisibleTextForAdding);
+                invisibleEditingTxtView = (TextView) findViewById(R.id.detailWishInvisibleTextForEditing);
+                if (wish.children_ids == null) {
                     childWishListTitle = new ArrayList<>();
                     childWishListTitle.add("点击添加子心愿");
-                }
-                else {
+                } else {
                     childWishList = wishMgr.queryChildWishesByParentId(wishID);
                     childWishListTitle = new ArrayList<>();
                     childWishListTitle.add("点击添加子心愿");
-                    for(Wish w : childWishList){
+                    for (Wish w : childWishList) {
                         childWishListTitle.add(w.title);
                     }
                 }
                 final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
                         childWishListTitle);
-                if(childWishListView != null){
+                if (childWishListView != null) {
                     childWishListView.setAdapter(adapter);
                 }
+                // TODO:修改
                 childWishListView.setOnItemClickListener(new ListView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (position == childWishListView.getFirstVisiblePosition()){
+                        if (position == childWishListView.getFirstVisiblePosition()) {
                             SetTextDialogUtil setTextDialog = new SetTextDialogUtil(DetailActivity.this);
-                            setTextDialog.setTextDialog(invisibleTxtView);
+                            setTextDialog.setTextDialog(invisibleAddingTxtView);
                         }
                     }
                 });
-                invisibleTxtView.addTextChangedListener(new TextWatcher() {
+                invisibleAddingTxtView.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
                     @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+
                     @Override
                     public void afterTextChanged(Editable s) {
-                        String extraChildWishTitle = invisibleTxtView.getText().toString();
+                        String extraChildWishTitle = invisibleAddingTxtView.getText().toString();
                         Wish extraChildWish = new Wish(extraChildWishTitle);
                         extraChildWish.parent_id = wishID;
                         Integer childId = wishMgr.addOneChildWishReturnId(extraChildWish);
@@ -220,17 +228,21 @@ public class DetailActivity extends AppCompatActivity
                 });
 
                 commentTxtView.setText(wish.comment);
-                commentTxtView.setOnClickListener(new View.OnClickListener(){
-                    public void onClick(View v){
+                commentTxtView.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
                         SetTextDialogUtil setTextDialog = new SetTextDialogUtil(DetailActivity.this);
                         setTextDialog.setTextDialog(commentTxtView);
                     }
                 });
                 commentTxtView.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
                     @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+
                     @Override
                     public void afterTextChanged(Editable s) {
                         wish.comment = commentTxtView.getText().toString();
@@ -257,12 +269,12 @@ public class DetailActivity extends AppCompatActivity
         }
 
         //show personal center
-        View headerView=navigationView.getHeaderView(0);
-        final EditText user_name=(EditText) headerView.findViewById(R.id.textName);
-        TextView user_level=(TextView) headerView.findViewById(R.id.textLevel);
-        TextView exp=(TextView) headerView.findViewById(R.id.textExp);
-        user=new User(DetailActivity.this);
-        if(!user.exist()) user.addUser();
+        View headerView = navigationView.getHeaderView(0);
+        final EditText user_name = (EditText) headerView.findViewById(R.id.textName);
+        TextView user_level = (TextView) headerView.findViewById(R.id.textLevel);
+        TextView exp = (TextView) headerView.findViewById(R.id.textExp);
+        user = new User(DetailActivity.this);
+        if (!user.exist()) user.addUser();
         user_name.setText(user.getUserName());
         user_level.setText("Level:" + Integer.toString(user.getLevel()));
         exp.setText("经验值：" + Integer.toString(user.getCurrentExpr()) + "/" + Integer.toString(user.getMaxExpr()));
@@ -322,11 +334,11 @@ public class DetailActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_achieve) {
-            Intent intent = new Intent(DetailActivity.this,AchieveActivity.class);
-            intent.putExtra("achieve",user.getHonors());
+            Intent intent = new Intent(DetailActivity.this, AchieveActivity.class);
+            intent.putExtra("achieve", user.getHonors());
             startActivity(intent);
         } else if (id == R.id.nav_star) {
-            Intent intent=new Intent(DetailActivity.this,StarActivity.class);
+            Intent intent = new Intent(DetailActivity.this, StarActivity.class);
             startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

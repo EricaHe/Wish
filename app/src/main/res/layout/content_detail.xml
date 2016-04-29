@@ -71,7 +71,10 @@
             android:layout_gravity="end" />
 
         <TextView
-            android:id="@+id/detailWishInvisibleText"
+            android:id="@+id/detailWishInvisibleTextForAdding"
+            android:visibility="invisible"/>
+        <TextView
+            android:id="@+id/detailWishInvisibleTextForEditing"
             android:visibility="invisible"/>
     </TableRow>
 

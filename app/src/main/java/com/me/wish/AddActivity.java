@@ -105,40 +105,44 @@ public class AddActivity extends AppCompatActivity {
             addWishBtn.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     try {
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
-                        String title = titleEditTxt.getText().toString();
-                        String description = descriptionEditTxt.getText().toString();
-                        String comment = commentEditTxt.getText().toString();
-                        Date dueDate = (dueDateTime.getText().toString().equals("")) ?
-                                null : sdf.parse(dueDateTime.getText().toString());
-                        Date createDate = new Date();
-                        Wish parentWish = new Wish(title, description, dueDate, createDate);
-                        parentWish.comment = comment;
+                        if (titleEditTxt.getText().toString().equals("")) {
+                            Toast.makeText(AddActivity.this, "标题不能为空", Toast.LENGTH_SHORT).show();
+                        } else {
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
+                            String title = titleEditTxt.getText().toString();
+                            String description = descriptionEditTxt.getText().toString();
+                            String comment = commentEditTxt.getText().toString();
+                            Date dueDate = (dueDateTime.getText().toString().equals("")) ?
+                                    null : sdf.parse(dueDateTime.getText().toString());
+                            Date createDate = new Date();
+                            Wish parentWish = new Wish(title, description, dueDate, createDate);
+                            parentWish.comment = comment;
 
-                        // add parent wish into database(without children ids)
-                        int parentId = wishMgr.addParentWishReturnId(parentWish);
+                            // add parent wish into database(without children ids)
+                            int parentId = wishMgr.addParentWishReturnId(parentWish);
 
-                        List<Wish> childrenWish = new ArrayList<Wish>();
-                        // add parent id to children wishes
-                        for (Wish child : childWish) {
-                            child.parent_id = parentId;
-                            childrenWish.add(child);
+                            List<Wish> childrenWish = new ArrayList<Wish>();
+                            // add parent id to children wishes
+                            for (Wish child : childWish) {
+                                child.parent_id = parentId;
+                                childrenWish.add(child);
+                            }
+                            // add children wishes into database(with parent id)
+                            wishMgr.addChildWishes(childrenWish);
+
+                            // update parent wish's children ids
+                            childrenWish.clear();
+                            childrenWish = wishMgr.queryChildWishesByParentId(parentId);
+                            String sChildrenWishIds = "";
+                            for (Wish child : childrenWish) {
+                                sChildrenWishIds = sChildrenWishIds + "," + Integer.toString(child.id);
+                            }
+                            sChildrenWishIds = (sChildrenWishIds.equals("")) ? "" : sChildrenWishIds.substring(1);
+                            wishMgr.updateChildIdByParentId(sChildrenWishIds, parentId);
+
+                            wishMgr.closeDB();
+                            finish();
                         }
-                        // add children wishes into database(with parent id)
-                        wishMgr.addChildWishes(childrenWish);
-
-                        // update parent wish's children ids
-                        childrenWish.clear();
-                        childrenWish = wishMgr.queryChildWishesByParentId(parentId);
-                        String sChildrenWishIds = "";
-                        for (Wish child : childrenWish) {
-                            sChildrenWishIds = sChildrenWishIds + "," + Integer.toString(child.id);
-                        }
-                        sChildrenWishIds = (sChildrenWishIds.equals("")) ? "" : sChildrenWishIds.substring(1);
-                        wishMgr.updateChildIdByParentId(sChildrenWishIds, parentId);
-
-                        wishMgr.closeDB();
-                        finish();
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }

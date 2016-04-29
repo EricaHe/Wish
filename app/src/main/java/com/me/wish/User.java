@@ -18,39 +18,35 @@ public class User {
     private int max_expr;
     private String honors;
 
-    public User(Context context)
-    {
+    public User(Context context) {
         dbhelper = new DBHelper(context);
         db = dbhelper.getWritableDatabase();
         cursor = db.query("user", null, null, null, null, null, null);
-        if(cursor.moveToFirst()) readDB();
+        if (cursor.moveToFirst()) readDB();
     }
 
     //judge if a user has been created
-    public boolean exist()
-    {
-        if(cursor.moveToFirst()) return true;
+    public boolean exist() {
+        if (cursor.moveToFirst()) return true;
         else return false;
     }
 
-    public void addUser()
-    {
+    public void addUser() {
         ContentValues values = new ContentValues();
-        values.put("_id",1);
-        values.put("name","请输入姓名");
-        values.put("level",0);
-        values.put("current_expr",0);
-        values.put("max_expr",10);
+        values.put("_id", 1);
+        values.put("name", "请输入姓名");
+        values.put("level", 0);
+        values.put("current_expr", 0);
+        values.put("max_expr", 10);
         values.put("honors", "太空菜鸟");
         db.insert("user", null, values);
         cursor = db.query("user", null, null, null, null, null, null);
         readDB();
     }
 
-    public void readDB()
-    {
+    public void readDB() {
         cursor = db.query("user", null, null, null, null, null, null);
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             name = cursor.getString(cursor.getColumnIndex("name"));
             level = cursor.getInt(cursor.getColumnIndex("level"));
             current_expr = cursor.getInt(cursor.getColumnIndex("current_expr"));
@@ -60,84 +56,67 @@ public class User {
     }
 
     //get information
-    public String getUserName()
-    {
+    public String getUserName() {
         return name;
     }
 
-    public int getLevel()
-    {
+    public int getLevel() {
         return level;
     }
 
-    public int getCurrentExpr()
-    {
+    public int getCurrentExpr() {
         return current_expr;
     }
 
-    public int getMaxExpr()
-    {
+    public int getMaxExpr() {
         return max_expr;
     }
 
-    public String[] getHonors()
-    {
+    public String[] getHonors() {
         return honors.split(",");//The honors are joined with ','
     }
 
 
     //update information
-    public void updateUserName(String newName)
-    {
-        name=newName;
+    public void updateUserName(String newName) {
+        name = newName;
         ContentValues values = new ContentValues();
-        values.put("name",newName);
-        db.update("user",values,null,null);
+        values.put("name", newName);
+        db.update("user", values, null, null);
     }
 
-    public void updateLevel(int newLevel)
-    {
-        level=newLevel;
+    public void updateLevel(int newLevel) {
+        level = newLevel;
         ContentValues values = new ContentValues();
-        values.put("level",newLevel);
-        db.update("user",values,null,null);
+        values.put("level", newLevel);
+        db.update("user", values, null, null);
     }
 
-    public void updateCurrentExpr(int newCurrentExpr)
-    {
-        current_expr=newCurrentExpr;
+    public void updateCurrentExpr(int newCurrentExpr) {
+        current_expr = newCurrentExpr;
         ContentValues values = new ContentValues();
-        values.put("current_expr",newCurrentExpr);
-        db.update("user",values,null,null);
+        values.put("current_expr", newCurrentExpr);
+        db.update("user", values, null, null);
     }
 
-    public void updateMaxExpr(int newMaxExpr)
-    {
+    public void updateMaxExpr(int newMaxExpr) {
         max_expr = newMaxExpr;
         ContentValues values = new ContentValues();
-        values.put("max_expr",newMaxExpr);
-        db.update("user",values,null,null);
+        values.put("max_expr", newMaxExpr);
+        db.update("user", values, null, null);
     }
 
-    public void updateHonors(String newHonor)
-    {
-        if(honors=="") honors=newHonor;
-        else honors += ","+newHonor;
+    public void updateHonors(String newHonor) {
+        if (honors == "") honors = newHonor;
+        else honors += "," + newHonor;
         ContentValues values = new ContentValues();
-        values.put("honors",honors);
-        db.update("user",values,null,null);
+        values.put("honors", honors);
+        db.update("user", values, null, null);
     }
 
-    public void closeDB()
-    {
+    public void closeDB() {
         db.close();
     }
-
-
-
-
-
-
 
 
 }

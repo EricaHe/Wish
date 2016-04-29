@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,7 +28,7 @@ public class WishDBManager {
     }
 
     // add part
-    public Integer addOneChildWishReturnId(Wish childWish){
+    public Integer addOneChildWishReturnId(Wish childWish) {
         db.beginTransaction();
         Integer childId = -1;
         try {
@@ -355,11 +354,11 @@ public class WishDBManager {
             wish.expr = c.getInt(c.getColumnIndex("expr"));
 
             String sChildIds = c.getString(c.getColumnIndex("child_id"));
-            if (sChildIds == null || sChildIds.equals("")){
+            if (sChildIds == null || sChildIds.equals("")) {
                 wish.children_ids = null;
             } else {
                 wish.children_ids = new ArrayList<Integer>();
-                for(String sci : sChildIds.split(",")){
+                for (String sci : sChildIds.split(",")) {
                     wish.children_ids.add(Integer.parseInt(sci));
                 }
             }
@@ -420,28 +419,22 @@ public class WishDBManager {
         return result;
     }
 
-    public void getFinishedDate(List<CircleCanvas.CircleInfo> circleInfos,float deltax,float deltay,float r)
-    {
-        Cursor c=db.rawQuery("select * from child_wish where is_finished = ? order by finish_date asc",new String[]{"1"});
+    public void getFinishedDate(List<CircleCanvas.CircleInfo> circleInfos, float deltax, float deltay, float r) {
+        Cursor c = db.rawQuery("select * from child_wish where is_finished = ? order by finish_date asc", new String[]{"1"});
         String finishtime;
-        int i=0;
-        if(c.moveToFirst())
-        {
-            finishtime=c.getString(c.getColumnIndex("finish_date"));
-            String a=Integer.toString(finishtime.length());
-            circleInfos.add(new CircleCanvas.CircleInfo(Float.parseFloat(finishtime.substring(5, 7))*deltax, Float.parseFloat(finishtime.substring(8, 10))*deltay, r));
+        int i = 0;
+        if (c.moveToFirst()) {
+            finishtime = c.getString(c.getColumnIndex("finish_date"));
+            String a = Integer.toString(finishtime.length());
+            circleInfos.add(new CircleCanvas.CircleInfo(Float.parseFloat(finishtime.substring(5, 7)) * deltax, Float.parseFloat(finishtime.substring(8, 10)) * deltay, r));
         }
-        while(c.moveToNext())
-        {
-            finishtime=c.getString(c.getColumnIndex("finish_date"));
-            if(Float.parseFloat(finishtime.substring(5, 7))*deltax==circleInfos.get(i).getX()&&Float.parseFloat(finishtime.substring(8,10))*deltay==circleInfos.get(i).getY())
-            {
+        while (c.moveToNext()) {
+            finishtime = c.getString(c.getColumnIndex("finish_date"));
+            if (Float.parseFloat(finishtime.substring(5, 7)) * deltax == circleInfos.get(i).getX() && Float.parseFloat(finishtime.substring(8, 10)) * deltay == circleInfos.get(i).getY()) {
                 //That day finish more than 1 wish
                 circleInfos.get(i).addRadius(r);
-            }
-            else
-            {
-                circleInfos.add(new CircleCanvas.CircleInfo(Float.parseFloat(finishtime.substring(5, 7))*deltax,Float.parseFloat(finishtime.substring(8, 10))*deltay,r));
+            } else {
+                circleInfos.add(new CircleCanvas.CircleInfo(Float.parseFloat(finishtime.substring(5, 7)) * deltax, Float.parseFloat(finishtime.substring(8, 10)) * deltay, r));
                 i++;
             }
         }

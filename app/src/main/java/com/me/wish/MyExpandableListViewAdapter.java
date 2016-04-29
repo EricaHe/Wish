@@ -37,16 +37,16 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
     private TextView exp;
 
     public MyExpandableListViewAdapter(Context context, List<Wish> wishes, List<List<Wish>> childWishes,
-                                       WishDBManager wishMgr,TextView user_level,TextView exp) {
+                                       WishDBManager wishMgr, TextView user_level, TextView exp) {
         this.context = context;
         this.wishes = wishes;
         this.childWishes = childWishes;
         this.isSelected = new ArrayList<SparseBooleanArray>();
         this.wishDBM = wishMgr;
-        this.user=new User(context);
-        this.user_level=user_level;
-        this.exp=exp;
-        if(!user.exist()) user.addUser();
+        this.user = new User(context);
+        this.user_level = user_level;
+        this.exp = exp;
+        if (!user.exist()) user.addUser();
 
         // initialize
         for (List<Wish> child : childWishes) {
@@ -167,13 +167,12 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
         } else
             groupHolder = (GroupHolder) convertView.getTag();
 
-        if (wishes.get(groupPosition).children_ids == null){
+        if (wishes.get(groupPosition).children_ids == null) {
             groupHolder.img.setVisibility(View.INVISIBLE);
-        }
-        else if (!isExpanded) {
+        } else if (!isExpanded) {
             groupHolder.img.setVisibility(View.VISIBLE);
             groupHolder.img.setBackgroundResource(android.R.drawable.arrow_down_float);
-        }else{
+        } else {
             groupHolder.img.setVisibility(View.VISIBLE);
             groupHolder.img.setBackgroundResource(android.R.drawable.arrow_up_float);
         }
@@ -228,48 +227,45 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
                     finalItemHolder.txt.getPaint().setStrikeThruText(false);
                     finalItemHolder.txt.setTextColor(0xff616161);
                     wishDBM.updateIsFinishedById("child_wish", childWishes.get(groupPosition).get(childPosition).id, 0);
-                    childWishes.get(groupPosition).get(childPosition).isFinished=false;
+                    childWishes.get(groupPosition).get(childPosition).isFinished = false;
                     wishDBM.updateFinishDateById("child_wish", childWishes.get(groupPosition).get(childPosition).id, null);
-                    childWishes.get(groupPosition).get(childPosition).finishDate=null;
+                    childWishes.get(groupPosition).get(childPosition).finishDate = null;
 
                     Toast.makeText(MainActivity.mAct, "减少10点经验", Toast.LENGTH_SHORT).show();
                     user.updateCurrentExpr(user.getCurrentExpr() - childWishes.get(groupPosition).get(childPosition).expr);
-                    int level=user.getLevel();
-                    if(user.getCurrentExpr()<level*level*10)
-                    {
+                    int level = user.getLevel();
+                    if (user.getCurrentExpr() < level * level * 10) {
                         user.updateLevel(level - 1);
-                        user.updateMaxExpr(level*level*10);
+                        user.updateMaxExpr(level * level * 10);
                     }
                 } else {
                     if (childWishes.get(groupPosition).get(childPosition).isDaily) {
                         Date currentDate = new Date();
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
-                        if(childWishes.get(groupPosition).get(childPosition).finishDate==null||
-                                sdf.format(childWishes.get(groupPosition).get(childPosition).finishDate)==sdf.format(currentDate))
-                        {
+                        if (childWishes.get(groupPosition).get(childPosition).finishDate == null ||
+                                sdf.format(childWishes.get(groupPosition).get(childPosition).finishDate) == sdf.format(currentDate)) {
                             Toast.makeText(MainActivity.mAct, "增加10点经验", Toast.LENGTH_SHORT).show();
                             user.updateCurrentExpr(user.getCurrentExpr() + childWishes.get(groupPosition).get(childPosition).expr);
                             wishDBM.updateFinishDateById("child_wish", childWishes.get(groupPosition).get(childPosition).id,
-                                new Date());
-                            childWishes.get(groupPosition).get(childPosition).finishDate=new Date();
-                         }
+                                    new Date());
+                            childWishes.get(groupPosition).get(childPosition).finishDate = new Date();
+                        }
                     } else {
                         // is finished
                         isSelected.get(groupPosition).put(childPosition, true);
                         finalItemHolder.txt.getPaint().setStrikeThruText(true);
                         finalItemHolder.txt.setTextColor(0xffbdbdbd);
                         wishDBM.updateIsFinishedById("child_wish", childWishes.get(groupPosition).get(childPosition).id, 1);
-                        childWishes.get(groupPosition).get(childPosition).isFinished=true;
+                        childWishes.get(groupPosition).get(childPosition).isFinished = true;
                         wishDBM.updateFinishDateById("child_wish", childWishes.get(groupPosition).get(childPosition).id,
                                 new Date());
-                        childWishes.get(groupPosition).get(childPosition).finishDate=new Date();
+                        childWishes.get(groupPosition).get(childPosition).finishDate = new Date();
                         Toast.makeText(MainActivity.mAct, "增加10点经验", Toast.LENGTH_SHORT).show();
                         user.updateCurrentExpr(user.getCurrentExpr() + childWishes.get(groupPosition).get(childPosition).expr);
                     }
                     //update level
-                    if(user.getCurrentExpr()>=user.getMaxExpr())
-                    {
-                        int level=user.getLevel();
+                    if (user.getCurrentExpr() >= user.getMaxExpr()) {
+                        int level = user.getLevel();
                         level++;
                         user.updateLevel(level);
                         user.updateMaxExpr((level + 1) * (level + 1) * 10);
@@ -284,16 +280,17 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
                         });
                         dialog.show();
                         //get a new achievement every 2 levels
-                        if(level%2==0) {
+                        if (level % 2 == 0) {
                             user.updateHonors("plus1");
-                            Log.d("in",Integer.toString(user.getHonors().length));
+                            Log.d("in", Integer.toString(user.getHonors().length));
                             AlertDialog.Builder achievedialog = new AlertDialog.Builder(context);
                             achievedialog.setTitle("An Achievement!");
                             achievedialog.setMessage("您获得了一个新成就，请前往荣誉称号页面查看");
                             achievedialog.setCancelable(false);
-                            achievedialog.setPositiveButton("OK",new DialogInterface.OnClickListener(){
+                            achievedialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialog, int which){}
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
                             });
                             achievedialog.show();
                         }
@@ -325,12 +322,10 @@ public class MyExpandableListViewAdapter extends BaseExpandableListAdapter {
 class GroupHolder {
     public TextView txt;
     public ImageView img;
-    public CheckBox chkBox;
     public TextView date;
 }
 
 class ItemHolder {
-    public ImageView img;
     public TextView txt;
     public CheckBox checkBox;
 }
